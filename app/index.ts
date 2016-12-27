@@ -1,7 +1,7 @@
 'use strict'
 
 import * as debugN from 'debug'
-import {ApiServer} from './app'
+import { ApiServer } from './app'
 
 let debug = debugN('api:index')
 

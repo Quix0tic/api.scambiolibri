@@ -27,6 +27,7 @@
     "pg-hstore": "^2.3.2",
     "reflect-metadata": "^0.1.8",
     "sequelize": "^4.0.0-2",
+    "sqlite": "^2.2.4",
     "typescript": "^2.1.4"
   }
 }

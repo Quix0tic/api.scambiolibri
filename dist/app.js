@@ -14,23 +14,17 @@ const bodyParser = require("body-parser");
 const routes_1 = require("./routes");
 class ApiServer {
     constructor(port) {
-        this._configure = () => {
+        this.start = () => __awaiter(this, void 0, void 0, function* () {
             this._express.use(bodyParser.json());
             this._express.use((req, _, next) => {
                 req.sequelize = this._database;
-                return next();
+                next();
             });
-        };
-        this._routes = () => {
-            this._express.use('', routes_1.router);
-        };
-        this.start = () => __awaiter(this, void 0, void 0, function* () {
-            this._configure();
-            this._routes();
+            this._express.use('/', routes_1.router);
             this._express.listen(this._port, () => {
                 console.log('Listening port ' + this._port);
             });
-            yield this._database.start();
+            this._database.start();
         });
         this.stop = () => __awaiter(this, void 0, void 0, function* () {
         });
@@ -44,7 +38,7 @@ class ApiServer {
             dialect: 'postgres',
             logging: debug('sequelize:db')
         } : {
-            dialect: 'postgres',
+            dialect: 'sqlite',
             storage: './db.postgres',
             logging: debug('postgres:db')
         });

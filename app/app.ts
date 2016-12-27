@@ -31,7 +31,7 @@ export class ApiServer {
       dialect: 'postgres',
       logging: debug('sequelize:db')
     } : {
-        dialect: 'postgres',
+        dialect: 'sqlite',
         storage: './db.postgres',
         logging: debug('postgres:db')
       })
@@ -43,13 +43,13 @@ export class ApiServer {
     this._express.use(bodyParser.json())
     this._express.use((req: MyRequest, _, next) => {
       req.sequelize = this._database
-      return next()
+      next()
     })
-    this._express.use('', router)
+    this._express.use('/', router)
     this._express.listen(this._port, () => {
       console.log('Listening port ' + this._port)
     })
-    await this._database.start()
+    this._database.start()
   }
 
   public stop = async () => {
