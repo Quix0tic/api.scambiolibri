@@ -8,7 +8,7 @@ const checkParams = (params: string[]) => (req: express.Request, res: express.Re
     }
     return next()
 }
-const _log = debug('api:router')
+
 export var router = express.Router();
 
 router.route("/announcements/:city")

@@ -44,7 +44,6 @@ export class SequelizeDatabase {
     public User: UserModel
     public Announcement: AnnouncementModel
     private config: StorageConfiguration
-    private _log: debug.IDebugger
     private _error: debug.IDebugger
 
     constructor(config: StorageConfiguration) {
@@ -116,7 +115,7 @@ export class SequelizeDatabase {
                 allowNull: false
             },
             price: {
-                type: Sequelize.INTEGER(2),
+                type: Sequelize.INTEGER,
                 allowNull: false
             },
             phone: {
@@ -138,20 +137,15 @@ export class SequelizeDatabase {
 
     private _connect = async () => {
         try {
-            this._log('trying to authenticate...')
             await this.db.authenticate()
-            this._log('connected')
-        } catch (error) {
-            this._log(`ERR: ${error}`)
+        } catch (error) {            
         }
     }
     private _init = async () => {
         try {
-            this._log('initializing models...')
             await this.db.sync({ force: false })
-            return this._log('models synced')
         } catch (error) {
-            this._error(`${error} syncing models, exiting...`)
+
             return process.exit(1)
         }
     }

@@ -17,7 +17,6 @@ export class ApiServer {
   private _express: express.Application
   private _database: SequelizeModule.SequelizeDatabase
   private _listening: boolean
-  private _log: debug.IDebugger
   private _port: number
 
   public constructor(port: number) {
@@ -38,14 +37,12 @@ export class ApiServer {
       })
 
     this._express = express()
-    this._log = debug('cosmic:server')
   }
 
   private _configure = () => {
     this._express.use(bodyParser.json())
     this._express.use((req: MyRequest, _, next) => {
       req.sequelize = this._database
-      this._log("Something happening")
       return next()
     })
   }
@@ -58,7 +55,7 @@ export class ApiServer {
     this._configure()
     this._routes()
     this._express.listen(this._port, () => {
-      this._log(`listening on port ${this._port}`)
+     
     })
     await this._database.start()
   }
