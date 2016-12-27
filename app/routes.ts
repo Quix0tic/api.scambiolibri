@@ -47,6 +47,10 @@ router.route("/announcements")
             price: req.body.price,
             phone: req.body.phone,
             city: req.body.city
+        }).then(function () {
+            res.json({
+                error: false,
+            })
         })
 
     })
@@ -60,8 +64,23 @@ router.route("/announcement/:uuid")
             res.status(200).json(data)
         })
     })
-    .put(checkParams([]), async (req: MyRequest, res) => {
+    .put(checkParams(["uuid"]),
+    async (req: MyRequest, res) => {
         //modifica annuncio
+
+        req.sequelize.Announcement.find({
+            where: {
+                uuid: req.body.uuid
+            }
+        }).done(function (data) {
+            if (data) {
+                data.update(req.body).thenReturn(
+                    function () {
+                        res.json({ error: false })
+                    }
+                )
+            }
+        })
     })
     .delete(async (req: MyRequest, res) => {
         //rimuovi annuncio
