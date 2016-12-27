@@ -55,7 +55,7 @@ export class ApiServer {
     this._configure()
     this._routes()
     this._express.listen(this._port, () => {
-     console.log('cazzo rotto alla porta ' + this._port)
+      console.log('Listening port ' + this._port)
     })
     await this._database.start()
   }
