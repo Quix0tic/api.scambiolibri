@@ -2,7 +2,6 @@ import * as Sequelize from 'sequelize'
 import * as debug from 'debug'
 
 export interface UserAttribute {
-    uuid: string
     name: string
     number: string
     encrypted_password: string
