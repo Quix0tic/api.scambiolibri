@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize'
 import * as debug from 'debug'
 
-interface UserAttribute {
+export interface UserAttribute {
     uuid: string
     name: string
     number: string
@@ -10,8 +10,7 @@ interface UserAttribute {
     city: string
     created_at: Date
 }
-interface AnnouncementAttribute {
-    uuid: string
+export interface AnnouncementAttribute {
     title: string
     isbn: string
     subject: string
@@ -21,7 +20,6 @@ interface AnnouncementAttribute {
     price: number
     phone: string
     city: string
-    created_at: Date
 }
 export interface StorageConfiguration {
     database?: string
@@ -55,8 +53,8 @@ export class SequelizeDatabase {
             this.config)
         this.User = this.db.define<UserInstance, UserAttribute>('User', {
             uuid: {
-                type: Sequelize.STRING,
-                allowNull: false
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV4
             },
             name: {
                 type: Sequelize.STRING,
@@ -83,8 +81,9 @@ export class SequelizeDatabase {
             })
         this.Announcement = this.db.define<AnnouncementInstance, AnnouncementAttribute>('Announcement', {
             uuid: {
-                type: Sequelize.STRING,
-                allowNull: false
+                primaryKey: true,
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV4,
             },
             title: {
                 type: Sequelize.STRING,
@@ -130,7 +129,7 @@ export class SequelizeDatabase {
     private _connect = async () => {
         try {
             await this.db.authenticate()
-        } catch (error) {            
+        } catch (error) {
         }
     }
     private _init = async () => {

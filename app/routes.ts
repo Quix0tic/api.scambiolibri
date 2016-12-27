@@ -1,6 +1,7 @@
 import * as express from 'express'
 import * as debug from 'debug'
 import { MyRequest } from './app'
+import { UserAttribute, AnnouncementAttribute } from './models'
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
@@ -10,43 +11,59 @@ const checkParams = (params: string[]) => (req: express.Request, res: express.Re
 }
 
 export var router = express.Router();
+var uuid = require("node-uuid");
 
-router.route("/announcements/:city")
+router.get("/announcements/:city", async (req: MyRequest, res) => {
+    var _city = req.params.city;
+    //restituisci gli annunci della città
+    req.sequelize.Announcement.findAll({
+        where: {
+            city: _city
+        }
+    }).then(async (data) => {
+        res.status(200)
+            .json(data)
+    })
+
+})
+
+router.route("/announcements")
     .get(async (req: MyRequest, res) => {
-        var _city = req.params.city;
-        if (_city) {
-            //restituisci gli annunci della città
-            req.sequelize.Announcement.findAll({
-                where: {
-                    city: _city
-                }
-            }).then(function(data){
-                res.status(200)
+        //restituisci tutti gli annunci
+        req.sequelize.Announcement.findAll().then(function (data) {
+            res.status(200)
                 .json(data)
-            })
-        } else {
-            //restituisci tutti gli annunci
-            req.sequelize.Announcement.findAll().then(function(data){
-                res.status(200)
-                .json(data)
-            })
-        }
-    })
-    .post(checkParams([]), function (req: MyRequest, res) {
-        //Aggiungi un annuncio
-        if(req.body instanceof Array){
-
-        }
-    })
-router.route("/announcement/:uuid")
-    .get(function (req: MyRequest, res) {
-        res.json({
-            message: "Coglione destro"
         })
     })
-    .put(function (req: MyRequest, res) {
+    .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
+    async (req: MyRequest, res) => {
+        //inserisci annuncio
+        req.sequelize.Announcement.create({
+            title: req.body.title,
+            isbn: req.body.isbn,
+            subject: req.body.subject,
+            edition: req.body.edition,
+            grade: req.body.grade,
+            notes: req.body.notes,
+            price: req.body.price,
+            phone: req.body.phone,
+            city: req.body.city
+        })
 
     })
-    .delete(function (req: MyRequest, res) {
-
+router.route("/announcement/:uuid")
+    .get(async (req: MyRequest, res) => {
+        req.sequelize.Announcement.findOne({
+            where: {
+                uuid: req.params.uuid
+            }
+        }).then(async (data) => {
+            res.status(200).json(data)
+        })
+    })
+    .put(checkParams([]), async (req: MyRequest, res) => {
+        //modifica annuncio
+    })
+    .delete(async (req: MyRequest, res) => {
+        //rimuovi annuncio
     })
