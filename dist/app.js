@@ -28,6 +28,7 @@ class ApiServer {
             this._configure();
             this._routes();
             this._express.listen(this._port, () => {
+                console.log('Listening port ' + this._port);
             });
             yield this._database.start();
         });
