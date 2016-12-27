@@ -39,21 +39,13 @@ export class ApiServer {
     this._express = express()
   }
 
-  private _configure = () => {
+  public start = async () => {
     this._express.use(bodyParser.json())
     this._express.use((req: MyRequest, _, next) => {
       req.sequelize = this._database
       return next()
     })
-  }
-
-  private _routes = () => {
     this._express.use('', router)
-  }
-
-  public start = async () => {
-    this._configure()
-    this._routes()
     this._express.listen(this._port, () => {
       console.log('Listening port ' + this._port)
     })
