@@ -23,9 +23,7 @@ router.get("/announcements/:city", async (req: MyRequest, res) => {
         res.status(200)
             .json(data)
     })
-
 })
-
 router.route("/announcements")
     .get(async (req: MyRequest, res) => {
         //restituisci tutti gli annunci
@@ -65,8 +63,7 @@ router.route("/announcement/:uuid")
         })
     })
     .put(async (req: MyRequest, res) => {
-        //modifica annuncio
-
+        //Aggiorna annuncio
         req.sequelize.Announcement.find({
             where: {
                 uuid: req.params.uuid
@@ -83,4 +80,28 @@ router.route("/announcement/:uuid")
     })
     .delete(async (req: MyRequest, res) => {
         //rimuovi annuncio
+    })
+
+router.post("/login", async(req: MyRequest, res) =>{
+
+})
+router.post("/user", async(req: MyRequest, res) => {
+        //nuovo user
+    })
+router.route("/user/:uuid")
+    .put(async(req: MyRequest, res)=>{
+        //Aggiorna info user
+        req.sequelize.User.find({
+            where: {
+                uuid: req.params.uuid
+            }
+        }).done(function (data) {
+            if (data) {
+                data.update(req.body).then(function(){
+                    res.json({
+                        error: false
+                    })
+                })
+            }
+        })
     })
