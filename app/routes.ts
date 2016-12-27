@@ -64,21 +64,20 @@ router.route("/announcement/:uuid")
             res.status(200).json(data)
         })
     })
-    .put(checkParams(["uuid"]),
-    async (req: MyRequest, res) => {
+    .put(async (req: MyRequest, res) => {
         //modifica annuncio
 
         req.sequelize.Announcement.find({
             where: {
-                uuid: req.body.uuid
+                uuid: req.params.uuid
             }
         }).done(function (data) {
             if (data) {
-                data.update(req.body).thenReturn(
-                    function () {
-                        res.json({ error: false })
-                    }
-                )
+                data.update(req.body).then(function(){
+                    res.json({
+                        error: false
+                    })
+                })
             }
         })
     })
