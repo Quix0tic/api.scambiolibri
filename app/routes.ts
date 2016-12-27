@@ -1,11 +1,10 @@
 import * as express from 'express'
 import * as debug from 'debug'
 import { MyRequest } from './app'
-import { UserAttribute, AnnouncementAttribute } from './models'
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
-        if (!req.query[param]) return next(new Error(`param ${param} is missing`))
+        if (!req.body[param]) return next(new Error(`param ${param} is missing`))
     }
     return next()
 }
