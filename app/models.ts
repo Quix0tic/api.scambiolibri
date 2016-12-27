@@ -77,10 +77,6 @@ export class SequelizeDatabase {
             city: {
                 type: Sequelize.STRING,
                 allowNull: false
-            },
-            created_at: {
-                type: Sequelize.STRING,
-                allowNull: false
             }
         }, {
                 tableName: 'users'
@@ -124,10 +120,6 @@ export class SequelizeDatabase {
             },
             city: {
                 type: Sequelize.STRING,
-                allowNull: false
-            },
-            created_at: {
-                type: Sequelize.NOW,
                 allowNull: false
             }
         }, {
