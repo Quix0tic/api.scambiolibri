@@ -1,0 +1,32 @@
+{
+    "authors": "samuelneff <https://github.com/samuelneff>, Peter Harris <https://github.com/codeanimal>, Ivan Drinchev <https://github.com/drinchev>",
+    "definitionFilename": "index.d.ts",
+    "libraryDependencies": [
+        "bluebird",
+        "lodash",
+        "validator"
+    ],
+    "moduleDependencies": [
+        "bluebird",
+        "lodash"
+    ],
+    "libraryMajorVersion": "4",
+    "libraryMinorVersion": "0",
+    "libraryName": "Sequelize 4.0.0",
+    "typingsPackageName": "sequelize",
+    "projectName": "http://sequelizejs.com",
+    "sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
+    "sourceBranch": "types-2.0",
+    "kind": "ProperModule",
+    "globals": [
+        "sequelize"
+    ],
+    "declaredModules": [
+        "sequelize"
+    ],
+    "files": [
+        "index.d.ts"
+    ],
+    "hasPackageJson": false,
+    "contentHash": "7906d19c299a9bfc00722351a49b4aa5914f8dc76d1919d45192f4e433a99440"
+}
