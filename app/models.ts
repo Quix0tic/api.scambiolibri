@@ -3,9 +3,9 @@ import * as debug from 'debug'
 
 export interface UserAttribute {
     name: string
-    number: string
-    encrypted_password: string
-    salt: string
+    phone: string
+    passwordHash: string
+    passwordHashSalt: string
     city: string
     created_at: Date
 }
@@ -59,15 +59,16 @@ export class SequelizeDatabase {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            number: {
+            phone: {
+                type: Sequelize.STRING,
+                unique: true,
+                allowNull: false
+            },
+            passwordHash: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            encrypted_password: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            salt: {
+            passwordHashSalt: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
