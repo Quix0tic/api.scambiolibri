@@ -7,7 +7,6 @@ export interface UserAttribute {
     passwordHash: string
     passwordHashSalt: string
     city: string
-    created_at: Date
 }
 export interface AnnouncementAttribute {
     title: string
@@ -65,11 +64,11 @@ export class SequelizeDatabase {
                 allowNull: false
             },
             passwordHash: {
-                type: Sequelize.STRING,
+                type: Sequelize.BLOB,
                 allowNull: false
             },
             passwordHashSalt: {
-                type: Sequelize.STRING,
+                type: Sequelize.BLOB,
                 allowNull: false
             },
             city: {
