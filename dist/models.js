@@ -30,36 +30,30 @@ class SequelizeDatabase {
             yield this._init();
         });
         this.config = config;
-        this.db = new Sequelize(this.config.database ? this.config.database : 'database', //se esiste: config.database o 'database' 
-        this.config.username ? this.config.username : 'username', //se esiste: config.username o 'username' 
-        this.config.password ? this.config.password : 'password', //se esiste: config.password o 'password' 
-        this.config);
+        this.db = new Sequelize(this.config.database ? this.config.database : 'database', this.config.username ? this.config.username : 'username', this.config.password ? this.config.password : 'password', this.config);
         this.User = this.db.define('User', {
             uuid: {
-                type: Sequelize.STRING,
-                allowNull: false
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV4
             },
             name: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            number: {
+            phone: {
                 type: Sequelize.STRING,
+                unique: true,
                 allowNull: false
             },
-            encrypted_password: {
-                type: Sequelize.STRING,
+            passwordHash: {
+                type: Sequelize.BLOB,
                 allowNull: false
             },
-            salt: {
-                type: Sequelize.STRING,
+            passwordHashSalt: {
+                type: Sequelize.BLOB,
                 allowNull: false
             },
             city: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            created_at: {
                 type: Sequelize.STRING,
                 allowNull: false
             }
@@ -68,8 +62,9 @@ class SequelizeDatabase {
         });
         this.Announcement = this.db.define('Announcement', {
             uuid: {
-                type: Sequelize.STRING,
-                allowNull: false
+                primaryKey: true,
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV4,
             },
             title: {
                 type: Sequelize.STRING,
@@ -105,10 +100,6 @@ class SequelizeDatabase {
             },
             city: {
                 type: Sequelize.STRING,
-                allowNull: false
-            },
-            created_at: {
-                type: Sequelize.NOW,
                 allowNull: false
             }
         }, {

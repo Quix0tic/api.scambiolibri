@@ -10,12 +10,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const express = require("express");
 const SequelizeModule = require("./models");
 const debug = require("debug");
+const session = require("express-session");
+const passport = require("passport");
 const bodyParser = require("body-parser");
 const routes_1 = require("./routes");
+var SequelizeStore = require('connect-session-sequelize')(session.Store);
+var cookieParser = require('cookie-parser');
 class ApiServer {
     constructor(port) {
         this.start = () => __awaiter(this, void 0, void 0, function* () {
+            var sessionStore = new SequelizeStore({
+                db: this._database
+            });
             this._express.use(bodyParser.json());
+            this._express.use(cookieParser());
+            this._express.use(session(require(__dirname + '/config/session.js')(sessionStore)));
+            this._express.use(passport.initialize());
+            this._express.use(passport.session());
+            passport.use('local-signup', require(__dirname + '/strategies/local-signup.js')(this._database.User));
+            passport.use('local-login', require(__dirname + '/strategies/local-login.js')(this._database.User));
+            passport.serializeUser(require(__dirname + '/strategies/serializeUser.js'));
+            passport.deserializeUser(require(__dirname + '/strategies/deserializeUser.js')(this._database.User));
             this._express.use((req, _, next) => {
                 req.sequelize = this._database;
                 next();
@@ -34,7 +49,7 @@ class ApiServer {
             username: process.env.POSTGRES_USER || 'api',
             password: process.env.POSTGRES_PASSWORD || '',
             database: process.env.POSTGRES_DB || 'api',
-            host: 'postgres',
+            host: '127.0.0.1',
             dialect: 'postgres',
             logging: debug('sequelize:db')
         } : {

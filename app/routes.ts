@@ -5,7 +5,7 @@ var checkLoggedIn = require(__dirname + '/../middleware/check-logged-in.js');
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
-        if (!req.body[param]) return next(new Error(`param ${param} is missing`))
+        if (!req.body[param]) res.json({error:true,message:`param ${param} is missing`})
     }
     return next()
 }
@@ -36,14 +36,9 @@ router.route("/announcements")
     function (req: MyRequest, res) {
         //inserisci annuncio
         req.sequelize.Announcement.create(req.body)
-            .then(function () {
+            .then(function (data) {
                 res.status(200).json({
                     error: false,
-                })
-            }, function (err) {
-                res.status(400).json({
-                    error: true,
-                    message: "Impossibile creare"
                 })
             })
 
@@ -56,10 +51,6 @@ router.route("/announcement/:uuid")
             }
         }).then(function (data) {
             res.status(200).json(data)
-        }, function (err) {
-            res.status(400).json({
-                error: true
-            })
         })
     })
     .put(function (req: MyRequest, res) {
@@ -75,22 +66,18 @@ router.route("/announcement/:uuid")
                         error: false,
                         announcement: data
                     })
-                }, function (err) {
+            }/*, function (err) {
                     res.status(400).json({
                         error: true,
                         message: "Impossibile modificare"
                     })
-                })
+                }*/)
             } else {          //Annuncio non trovato 
                 res.json({
                     error: true,
                     message: "Nessun annuncio trovato"
                 })
             }
-        }, function (err) {
-            res.status(400).json({
-                error: true
-            })
         })
     })
     .delete(checkLoggedIn, function (req: MyRequest, res) {
@@ -103,16 +90,11 @@ router.post("/login", function (req: MyRequest, res) {
 router.post("/signup", function (req: MyRequest, res) {
     //nuovo user
     req.sequelize.User.create(req.body)
-            .then(function () {
-                res.status(200).json({
-                    error: false,
-                })
-            }, function (err) {
-                res.status(400).json({
-                    error: true,
-                    message: "Impossibile creare"
-                })
+        .then(function () {
+            res.status(200).json({
+                error: false,
             })
+        })
 
 })
 router.route("/user/:uuid")
@@ -122,7 +104,7 @@ router.route("/user/:uuid")
             where: {
                 uuid: req.params.uuid
             }
-        }).done(function (data) {
+        }).then(function (data) {
             if (data) {
                 data.update(req.body).then(function () {
                     res.json({
