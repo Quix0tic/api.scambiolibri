@@ -20,9 +20,8 @@ router.get("/announcements/:city", function (req: MyRequest, res) {
         where: {
             city: _city
         }
-    }).then(async (data) => {
-        res.status(200)
-            .json(data)
+    }).then(function (data) {
+        res.status(200).json(data)
     })
 })
 router.route("/announcements")
@@ -34,12 +33,17 @@ router.route("/announcements")
         })
     })
     .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
-    async (req: MyRequest, res) => {
+    function (req: MyRequest, res) {
         //inserisci annuncio
         req.sequelize.Announcement.create(req.body)
             .then(function () {
-                res.json({
+                res.status(200).json({
                     error: false,
+                })
+            }, function (err) {
+                res.status(400).json({
+                    error: true,
+                    message: "Impossibile creare"
                 })
             })
 
@@ -50,8 +54,12 @@ router.route("/announcement/:uuid")
             where: {
                 uuid: req.params.uuid
             }
-        }).then(async (data) => {
+        }).then(function (data) {
             res.status(200).json(data)
+        }, function (err) {
+            res.status(400).json({
+                error: true
+            })
         })
     })
     .put(function (req: MyRequest, res) {
@@ -63,17 +71,26 @@ router.route("/announcement/:uuid")
         }).then(function (data) {
             if (data) {     //Announcio trovato
                 data.update(req.body).then(function (data) {
-                    res.json({
+                    res.status(200).json({
                         error: false,
                         announcement: data
                     })
-                })
-            }else{          //Annuncio non trovato 
-                res.json({
+                }, function (err) {
+                    res.status(400).json({
                         error: true,
-                        message: "Nessun annuncio trovato"
+                        message: "Impossibile modificare"
                     })
+                })
+            } else {          //Annuncio non trovato 
+                res.json({
+                    error: true,
+                    message: "Nessun annuncio trovato"
+                })
             }
+        }, function (err) {
+            res.status(400).json({
+                error: true
+            })
         })
     })
     .delete(checkLoggedIn, function (req: MyRequest, res) {
@@ -85,6 +102,18 @@ router.post("/login", function (req: MyRequest, res) {
 })
 router.post("/signup", function (req: MyRequest, res) {
     //nuovo user
+    req.sequelize.User.create(req.body)
+            .then(function () {
+                res.status(200).json({
+                    error: false,
+                })
+            }, function (err) {
+                res.status(400).json({
+                    error: true,
+                    message: "Impossibile creare"
+                })
+            })
+
 })
 router.route("/user/:uuid")
     .put(checkLoggedIn, function (req: MyRequest, res) {
