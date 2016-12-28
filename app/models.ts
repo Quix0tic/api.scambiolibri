@@ -45,9 +45,9 @@ export class SequelizeDatabase {
     constructor(config: StorageConfiguration) {
         this.config = config
         this.db = new Sequelize(
-            this.config.database ? this.config.database : 'database', //se esiste: config.database o 'database' 
-            this.config.username ? this.config.username : 'username', //se esiste: config.username o 'username' 
-            this.config.password ? this.config.password : 'password',//se esiste: config.password o 'password' 
+            this.config.database ? this.config.database : 'database',
+            this.config.username ? this.config.username : 'username',
+            this.config.password ? this.config.password : 'password',
             this.config)
         this.User = this.db.define<UserInstance, UserAttribute>('User', {
             uuid: {
