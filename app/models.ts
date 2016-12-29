@@ -81,7 +81,6 @@ export class SequelizeDatabase {
             })
         this.Announcement = this.db.define<AnnouncementInstance, AnnouncementAttribute>('Announcement', {
             uuid: {
-                primaryKey: true,
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
             },
