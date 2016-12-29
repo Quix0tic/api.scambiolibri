@@ -93,5 +93,6 @@ export class ApiServer {
   }
 
   public stop = async () => {
+    console.info("Port " + this._port + " is now free");
   }
 }
