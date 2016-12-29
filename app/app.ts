@@ -7,7 +7,6 @@ import * as session from 'express-session'
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
 import { router } from './routes'
-var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var cookieParser = require('cookie-parser');
 
 export interface myError extends Error {
@@ -47,6 +46,7 @@ export class ApiServer {
   public start = async () => {
     this._express.use(bodyParser.json())
 
+/*
     var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
     // configure express
@@ -60,7 +60,7 @@ export class ApiServer {
       proxy: true // if you do SSL outside of node.
     }))
 
-    /*
+    
      var sessionStore = require('connect-session-sequelize')({
        db: this._database
      });
