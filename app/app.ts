@@ -29,9 +29,9 @@ export class ApiServer {
 
     //crea l'istanza del db
     this._database = new SequelizeModule.SequelizeDatabase((process.env.NODE_ENV === 'production') ? {
-      username: process.env.POSTGRES_USER || 'api',
+      username: process.env.POSTGRES_USER || 'postgres',
       password: process.env.POSTGRES_PASSWORD || '',
-      database: process.env.POSTGRES_DB || 'api',
+      database: process.env.POSTGRES_DB || 'scambio_libri',
       host: '127.0.0.1',
       dialect: 'postgres',
       logging: debug('sequelize:db')
@@ -45,6 +45,7 @@ export class ApiServer {
   }
 
   public start = async () => {
+    /*
     var sessionStore = new SequelizeStore({
       db: this._database.User
     });
@@ -59,7 +60,7 @@ export class ApiServer {
     passport.use('local-login', require(__dirname + '/strategies/local-login.js')(this._database.User));
     passport.serializeUser(require(__dirname + '/strategies/serializeUser.js'));
     passport.deserializeUser(require(__dirname + '/strategies/deserializeUser.js')(this._database.User));
-
+*/
     this._express.use((req: MyRequest, _, next) => {
       req.sequelize = this._database
       next()
