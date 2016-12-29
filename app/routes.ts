@@ -5,7 +5,7 @@ var checkLoggedIn = require(__dirname + '/../middleware/check-logged-in.js');
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
-        if (!req.body[param]) res.json({error:true,message:`param ${param} is missing`})
+        if (!req.body[param]) res.json({ error: true, message: `param ${param} is missing` })
     }
     return next()
 }
@@ -66,16 +66,6 @@ router.route("/announcement/:uuid")
                         error: false,
                         announcement: data
                     })
-            }/*, function (err) {
-                    res.status(400).json({
-                        error: true,
-                        message: "Impossibile modificare"
-                    })
-                }*/)
-            } else {          //Annuncio non trovato 
-                res.json({
-                    error: true,
-                    message: "Nessun annuncio trovato"
                 })
             }
         })
