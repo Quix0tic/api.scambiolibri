@@ -45,12 +45,13 @@ export class ApiServer {
   }
 
   public start = async () => {
+    this._express.use(bodyParser.json())
+
     /*
     var sessionStore = new SequelizeStore({
       db: this._database
     });
 
-    this._express.use(bodyParser.json())
     this._express.use(cookieParser());
     this._express.use(session(require(__dirname + '/config/session.js')(sessionStore)));
     this._express.use(passport.initialize());

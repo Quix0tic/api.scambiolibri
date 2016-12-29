@@ -57,12 +57,12 @@ router.route("/announcement/:uuid")
         //Edit announcement
         req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
             if (data) {     //Announcio trovato
-                /*data.update(req.body).then(function (data) {
+                data.update(req.body).then(function (data) {
                     res.status(200).json({
                         error: false,
                         announcement: data
                     })
-                }, e => next(e))*/
+                }, e => next(e))
             }
         }, e => next(e))
     })
