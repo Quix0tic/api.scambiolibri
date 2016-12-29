@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "grunt": "grunt",
     "tsc": "tsc",
-    "build": "build",
+    "build": "tsc",
     "start": "node./dist/index.js",
     "tinstall": "typings install"
   },
