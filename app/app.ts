@@ -46,7 +46,7 @@ export class ApiServer {
 
   public start = async () => {
     var sessionStore = new SequelizeStore({
-      db: this._database
+      db: this._database.User
     });
 
     this._express.use(bodyParser.json())
