@@ -40,7 +40,7 @@ router.route("/announcements")
                 res.status(200).json({
                     error: false,
                 })
-            })
+            }, e => next(e))
 
     })
 router.route("/announcement/:uuid")
@@ -58,7 +58,7 @@ router.route("/announcement/:uuid")
                         error: false,
                         announcement: data
                     })
-                })
+                }, e => next(e))
             }
         }, e => next(e))
     })
@@ -92,7 +92,7 @@ router.route("/user/:uuid")
                     res.json({
                         error: false
                     })
-                })
+                }, e => next(e))
             }
         }, e => next(e))
     })
