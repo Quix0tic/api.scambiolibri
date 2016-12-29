@@ -13,7 +13,7 @@ const checkParams = (params: string[]) => (req: express.Request, res: express.Re
 export var router = express.Router();
 var uuid = require("node-uuid");
 
-router.get("/announcements/:city", checkLoggedIn, function (req: MyRequest, res) {
+router.get("/announcements/:city", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
     var _city = req.params.city;
     //restituisci gli annunci della città
     req.sequelize.Announcement.findAll({
@@ -25,7 +25,7 @@ router.get("/announcements/:city", checkLoggedIn, function (req: MyRequest, res)
     })
 })
 router.route("/announcements")
-    .get(function (req: MyRequest, res) {
+    .get(function (req: MyRequest, res, next: express.NextFunction) {
         //restituisci tutti gli annunci
         req.sequelize.Announcement.findAll().then(function (data) {
             res.status(200)
@@ -33,7 +33,7 @@ router.route("/announcements")
         })
     })
     .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
-    function (req: MyRequest, res) {
+    function (req: MyRequest, res, next: express.NextFunction) {
         //inserisci annuncio
         req.sequelize.Announcement.create(req.body)
             .then(function (data) {
@@ -62,14 +62,14 @@ router.route("/announcement/:uuid")
             }
         }, e => next(e))
     })
-    .delete(checkLoggedIn, function (req: MyRequest, res) {
+    .delete(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Remove announcement
     })
 
-router.post("/login", function (req: MyRequest, res) {
+router.post("/login", function (req: MyRequest, res, next: express.NextFunction) {
 
 })
-router.post("/signup", function (req: MyRequest, res) {
+router.post("/signup", function (req: MyRequest, res, next: express.NextFunction) {
     //nuovo user
     req.sequelize.User.create(req.body)
         .then(function () {
@@ -80,7 +80,7 @@ router.post("/signup", function (req: MyRequest, res) {
 
 })
 router.route("/user/:uuid")
-    .put(checkLoggedIn, function (req: MyRequest, res) {
+    .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Edit user
         req.sequelize.User.findOne({
             where: {
