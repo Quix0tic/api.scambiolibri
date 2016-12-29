@@ -45,13 +45,13 @@ router.route("/announcements")
     })
 router.route("/announcement/:uuid")
     .get(function (req: MyRequest, res, next: express.NextFunction) {
-        req.sequelize.Announcement.findOne({where:{uuid:req.params.uuid}}).then(function (data) {
+        req.sequelize.Announcement.findOne({ where: { uuid: req.params.uuid } }).then(function (data) {
             res.status(200).json(data)
-        })
+        }, e => next(e))
     })
-    .put(function (req: MyRequest, res) {
+    .put(function (req: MyRequest, res, next: express.NextFunction) {
         //Edit announcement
-        req.sequelize.Announcement.findOne({where:{uuid:req.params.uuid}}).then(function (data) {
+        req.sequelize.Announcement.findOne({ where: { uuid: req.params.uuid } }).then(function (data) {
             if (data) {     //Announcio trovato
                 data.update(req.body).then(function (data) {
                     res.status(200).json({
@@ -60,7 +60,7 @@ router.route("/announcement/:uuid")
                     })
                 })
             }
-        })
+        }, e => next(e))
     })
     .delete(checkLoggedIn, function (req: MyRequest, res) {
         //Remove announcement
