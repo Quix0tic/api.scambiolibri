@@ -10,6 +10,10 @@
   "keywords": [],
   "author": "Marco Bortolan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Quix0tic/api.scambiolibri.git"
+  },
   "dependencies": {
     "@types/body-parser": "0.0.33",
     "@types/debug": "0.0.29",
