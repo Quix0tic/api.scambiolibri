@@ -61,7 +61,7 @@ export class ApiServer {
     passport.serializeUser(require(__dirname + '/strategies/serializeUser.js'));
     passport.deserializeUser(require(__dirname + '/strategies/deserializeUser.js')(this._database.User));
 */
-    this._express.use((req: MyRequest, _, next) => {
+    this._express.use((req: MyRequest, res, next) => {
       req.sequelize = this._database
       next()
     })
@@ -87,7 +87,7 @@ export class ApiServer {
     this._database.start().then(() => {
       console.info("Connected to database");
     }).catch((e) => {
-      console.error(e)
+      console.error("Error while connecting to database: " + e)
       process.exit(1)
     })
   }
