@@ -42,7 +42,6 @@ router.route("/announcements")
                     error: false,
                 })
             }, e => next(e))
-
     })
 router.route("/announcement/:uuid")
     .get(function (req: MyRequest, res, next: express.NextFunction) {

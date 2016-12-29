@@ -45,7 +45,6 @@ export class ApiServer {
 
   public start = async () => {
     this._express.use(bodyParser.json())
-    console.info(__dirname)
 /*
     var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
@@ -70,10 +69,10 @@ export class ApiServer {
     this._express.use(passport.initialize());
     this._express.use(passport.session());
 
-    passport.use('local-signup', require(__dirname + '/strategies/local-signup.js')(this._database.User));
-    passport.use('local-login', require(__dirname + '/strategies/local-login.js')(this._database.User));
-    passport.serializeUser(require(__dirname + '/strategies/serializeUser.js'));
-    passport.deserializeUser(require(__dirname + '/strategies/deserializeUser.js')(this._database.User));
+    passport.use('local-signup', require('/home/marco/api.scambiolibri/strategies/local-signup.js')(this._database.User));
+    passport.use('local-login', require('/home/marco/api.scambiolibri/strategies/local-login.js')(this._database.User));
+    passport.serializeUser(require('/home/marco/api.scambiolibri/strategies/serializeUser.js'));
+    passport.deserializeUser(require('/home/marco/api.scambiolibri/strategies/deserializeUser.js')(this._database.User));
 
     this._express.use((req: MyRequest, res, next) => {
       req.sequelize = this._database
