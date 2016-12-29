@@ -32,3 +32,67 @@ router.route("/announcements")
                 .json(data)
         })
     })
+    .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
+    function (req: MyRequest, res) {
+        //inserisci annuncio
+        req.sequelize.Announcement.create(req.body)
+            .then(function (data) {
+                res.status(200).json({
+                    error: false,
+                })
+            })
+
+    })
+router.route("/announcement/:uuid")
+    .get(function (req: MyRequest, res, next: express.NextFunction) {
+        req.sequelize.Announcement.findById(req.params.uuid).then(function (data) {
+            res.status(200).json(data)
+        })
+    })
+    .put(function (req: MyRequest, res) {
+        //Edit announcement
+        req.sequelize.Announcement.findById(req.params.uuid).then(function (data) {
+            if (data) {     //Announcio trovato
+                data.update(req.body).then(function (data) {
+                    res.status(200).json({
+                        error: false,
+                        announcement: data
+                    })
+                })
+            }
+        })
+    })
+    .delete(checkLoggedIn, function (req: MyRequest, res) {
+        //Remove announcement
+    })
+
+router.post("/login", function (req: MyRequest, res) {
+
+})
+router.post("/signup", function (req: MyRequest, res) {
+    //nuovo user
+    req.sequelize.User.create(req.body)
+        .then(function () {
+            res.status(200).json({
+                error: false,
+            })
+        })
+
+})
+router.route("/user/:uuid")
+    .put(checkLoggedIn, function (req: MyRequest, res) {
+        //Edit user
+        req.sequelize.User.findOne({
+            where: {
+                uuid: req.params.uuid
+            }
+        }).then(function (data) {
+            if (data) {
+                data.update(req.body).then(function () {
+                    res.json({
+                        error: false
+                    })
+                })
+            }
+        })
+    })
