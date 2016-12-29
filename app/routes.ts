@@ -13,7 +13,7 @@ const checkParams = (params: string[]) => (req: express.Request, res: express.Re
 export var router = express.Router();
 var uuid = require("node-uuid");
 
-router.get("/announcements/:city", function (req: MyRequest, res) {
+router.get("/announcements/:city", checkLoggedIn, function (req: MyRequest, res) {
     var _city = req.params.city;
     //restituisci gli annunci della città
     req.sequelize.Announcement.findAll({
