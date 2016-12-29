@@ -22,7 +22,7 @@ router.get("/announcements/:city", checkLoggedIn, function (req: MyRequest, res,
         }
     }).then(function (data) {
         res.status(200).json(data)
-    }, e=>next(e))
+    }, e => next(e))
 })
 router.route("/announcements")
     .get(function (req: MyRequest, res, next: express.NextFunction) {
@@ -30,7 +30,7 @@ router.route("/announcements")
         req.sequelize.Announcement.findAll().then(function (data) {
             res.status(200)
                 .json(data)
-        }, e=>next(e))
+        }, e => next(e))
     })
     .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
     function (req: MyRequest, res, next: express.NextFunction) {
@@ -76,7 +76,7 @@ router.post("/signup", function (req: MyRequest, res, next: express.NextFunction
             res.status(200).json({
                 error: false,
             })
-        }, e=>next(e))
+        }, e => next(e))
 
 })
 router.route("/user/:uuid")
@@ -94,5 +94,5 @@ router.route("/user/:uuid")
                     })
                 })
             }
-        }, e=>next(e))
+        }, e => next(e))
     })
