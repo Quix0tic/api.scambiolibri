@@ -28,7 +28,7 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
 router.route("/announcements")
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         //restituisci tutti gli annunci
-        req.sequelize.Announcement.findAll({attributes:["uuid","title","isbn","price"]}).then(function (data) {
+        req.sequelize.Announcement.findAll({attributes:["uuid","title","isbn","price", "city"]}).then(function (data) {
             res.status(200)
                 .json(data)
         }, e => next(e))
