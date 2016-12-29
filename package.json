@@ -2,12 +2,14 @@
   "name": "api.scambiolibri",
   "version": "1.0.0",
   "description": "RESTFul API",
-  "main": "build/index.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "grunt": "grunt",
+    "tsc": "tsc",
+    "start": "node./dist/index.js",
+    "tinstall": "typings install"
   },
-  "keywords": [],
   "author": "Marco Bortolan",
   "license": "MIT",
   "repository": {
@@ -32,8 +34,9 @@
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
     "reflect-metadata": "^0.1.8",
-    "sequelize": "^4.0.0-2",
+    "sequelize": "^3.27.0",
     "sqlite": "^2.2.4",
+    "tslint": "^3.15.1",
     "typescript": "^2.1.4"
   }
 }
