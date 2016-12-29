@@ -45,7 +45,7 @@ export class ApiServer {
 
   public start = async () => {
     this._express.use(bodyParser.json())
-
+    console.info(__dirname)
 /*
     var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
