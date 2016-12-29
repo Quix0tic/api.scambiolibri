@@ -46,19 +46,23 @@ router.route("/announcements")
 router.route("/announcement/:uuid")
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
-            res.status(200).json(data)
+            if(data){
+                res.status(200).json(data)
+            }else{
+                res.status(400).json(data)
+            }
         }, e => next(e))
     })
     .put(function (req: MyRequest, res, next: express.NextFunction) {
         //Edit announcement
-        req.sequelize.Announcement.findOne({ where: { uuid: req.params.uuid } }).then(function (data) {
+        req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
             if (data) {     //Announcio trovato
-                data.update(req.body).then(function (data) {
+                /*data.update(req.body).then(function (data) {
                     res.status(200).json({
                         error: false,
                         announcement: data
                     })
-                }, e => next(e))
+                }, e => next(e))*/
             }
         }, e => next(e))
     })
