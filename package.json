@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "grunt": "grunt",
     "tsc": "tsc",
+    "build": "build",
     "start": "node./dist/index.js",
     "tinstall": "typings install"
   },
@@ -25,7 +26,7 @@
     "@types/passport": "^0.3.0",
     "@types/sequelize": "^4.0.39",
     "body-parser": "^1.15.2",
-    "connect-session-sequelize": "^3.2.0",
+    "connect-session-sequelize": "^4.1.0",
     "cookie-parser": "^1.4.3",
     "debug": "^2.5.2",
     "express": "^4.14.0",
