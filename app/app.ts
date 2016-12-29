@@ -46,23 +46,23 @@ export class ApiServer {
 
   public start = async () => {
     this._express.use(bodyParser.json())
+    this._express.use(cookieParser());
 
-    
+   /* 
     var sessionStore = new SequelizeStore({
       db: this._database
     });
 
-    this._express.use(cookieParser());
     this._express.use(session(require(__dirname + '/config/session.js')(sessionStore)));
-    
-    /*this._express.use(passport.initialize());
+    */
+    this._express.use(passport.initialize());
     this._express.use(passport.session());
 
     passport.use('local-signup', require(__dirname + '/strategies/local-signup.js')(this._database.User));
     passport.use('local-login', require(__dirname + '/strategies/local-login.js')(this._database.User));
     passport.serializeUser(require(__dirname + '/strategies/serializeUser.js'));
     passport.deserializeUser(require(__dirname + '/strategies/deserializeUser.js')(this._database.User));
-*/
+
     this._express.use((req: MyRequest, res, next) => {
       req.sequelize = this._database
       next()
