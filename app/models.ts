@@ -51,6 +51,7 @@ export class SequelizeDatabase {
             this.config)
         this.User = this.db.define<UserInstance, UserAttribute>('User', {
             uuid: {
+                primaryKey: true,
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4
             },

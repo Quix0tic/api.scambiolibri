@@ -10,6 +10,10 @@ import { router } from './routes'
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var cookieParser = require('cookie-parser');
 
+export interface myError extends Error {
+  statusCode?: number
+}
+
 export interface MyRequest extends express.Request {
   sequelize: SequelizeModule.SequelizeDatabase
 }
@@ -61,10 +65,30 @@ export class ApiServer {
       next()
     })
     this._express.use('/', router)
-    this._express.listen(this._port, () => {
-      console.log('Listening port ' + this._port)
+    // 404 handler
+    this._express.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+      return res.status(404).json({
+        error: true,
+        message: 'route not found'
+      })
     })
-    this._database.start()
+    this._express.use((err: myError, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      res.status(err.statusCode || 500)
+      res.json({
+        name: err.name,
+        message: err.message,
+        stack: (this._express.get('env') === 'development') ? err.stack : {}
+      })
+    })
+    this._express.listen(this._port, () => {
+      console.info('Listening port ' + this._port)
+    })
+    this._database.start().then(() => {
+      console.info("Connected to database");
+    }).catch((e) => {
+      console.error(e)
+      process.exit(1)
+    })
   }
 
   public stop = async () => {
