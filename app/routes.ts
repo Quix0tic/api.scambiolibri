@@ -113,7 +113,7 @@ router.route("/user/:uuid")
         }, e => next(e))
     })
 router.get("/users", function (req: MyRequest, res, next: express.NextFunction) {
-    req.sequelize.User.findAll().then(function (data) {
+    req.sequelize.User.findAll({attributes:["name", "phone"]}).then(function (data) {
         res.status(200).json(data)
     }, e => next(e))
 })
