@@ -1,3 +1,3 @@
 module.exports = function(user, done) {
-    return done(null, user.id);
+    return done(null, user.phone);
 };
