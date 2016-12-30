@@ -7,11 +7,7 @@ module.exports = function(User) {
         passwordField : 'password',
         passReqToCallback: true
     }, function(req, phone, password, done) {
-        User.findOne({
-            where: {
-                phone: phone
-            }
-        }).then(function(foundUser) {
+        User.findByPrimary(phone).then(function(foundUser) {
             if (foundUser) { // User is found
                 crypto.pbkdf2(password, foundUser.passwordHashSalt, 4096, 512, 'sha256', function(err, generatedHash) {
                     if (err) {

@@ -51,7 +51,6 @@ export class SequelizeDatabase {
             this.config)
         this.User = this.db.define<UserInstance, UserAttribute>('User', {
             uuid: {
-                primaryKey: true,
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4
             },
@@ -60,6 +59,7 @@ export class SequelizeDatabase {
                 allowNull: false
             },
             phone: {
+                primaryKey: true,
                 type: Sequelize.STRING(10),
                 allowNull: false
             },

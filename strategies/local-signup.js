@@ -7,12 +7,8 @@ module.exports = function (User) {
         passwordField: 'password',
         passReqToCallback: true
     }, function (req, phone, password, done) {
-        User.findOne({
-            attributes: ["uuid", "phone"],
-            where: {
-                phone: req.body.phone
-            }
-        }).then(function (foundUser) {
+        console.log(phone + "    " + req.body.phone);
+        User.findByPrimary(phone).then(function (foundUser) {
             if (!foundUser) { // User not found
                 crypto.randomBytes(32, function (err, generatedSalt) {
                     if (err) {
