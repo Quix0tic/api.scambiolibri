@@ -23,6 +23,7 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
     //////////////////////////////////
 
     req.sequelize.Announcement.findAll({
+      attributes["uuid","title","isbn","subject","notes","price","phone"],
         where: {
             city: _city
         }
@@ -37,7 +38,9 @@ router.route("/announcements")
     //////////////////////////
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
-        req.sequelize.Announcement.findAll().then(function (data) {
+        req.sequelize.Announcement.findAll({
+          attributes["uuid","title","isbn","subject","notes","price","phone"]
+        }).then(function (data) {
             res.status(200)
                 .json(data)
         }, e => next(e))
@@ -83,8 +86,7 @@ router.route("/announcement/:uuid")
                 if (data.get().phone == req.user.get().phone) { //L'utente sta modificando un suo annuncio
                     data.update(req.body).then(function (data) {
                         res.status(200).json({
-                            error: false,
-                            announcement: data
+                            error: false
                         })
                     }, e => next(e))
                 } else {
@@ -178,12 +180,15 @@ router.route("/user/:phone")
         //Edit user
         req.sequelize.User.findByPrimary(req.params.phone).then(function (data) {
             if (data) {
-                if ()
+                if (req.params.phone==req.user.get().phone){
                     data.update(req.body).then(function () {
                         res.json({
                             error: false
                         })
                     }, e => next(e))
+                }else {
+                    res.status(403).json({ error: true, message: 'Non puoi modificare account altrui!' })
+                }
             }
         }, e => next(e))
     })
