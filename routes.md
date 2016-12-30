@@ -6,7 +6,7 @@ This route is used to login. See [Usage](usage#logging-in)
 ## POST /signup
 This route is used to signup. See [Usage](usage#signin-up)
 
-## POST /logout
+##  /logout
 _Need Login_
 
 This route is used to logout.
@@ -27,7 +27,7 @@ This route is used to create a new announcement
 This route is used to get all announcements in a specific `city`.
 > Returns: [`ShortAnnouncement[]`](types#announcement)
 
-## GET /announcements/user
+## GET /user/Announcements
 This route is used to get all announcements of user (cookies needed).
 > Returns: [`Announcement[]`](types#announcement)
 
