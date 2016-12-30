@@ -52,7 +52,7 @@ This route is used to delete the announcement with the specified `uuid`
 
 ## GET /user/:phone
 This route is used to get the user with the specified `phone` number.
-> Returns:  [`User`](types.md#User)
+> Returns:  [`User`](types.md#user)
 
 ## PUT /user
 _Need login_
