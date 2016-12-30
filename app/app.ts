@@ -3,6 +3,7 @@
 import * as express from 'express'
 import * as SequelizeModule from './models'
 import * as debug from 'debug'
+import * as passportModule from "./passport"
 import * as session from 'express-session'
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
@@ -66,13 +67,9 @@ export class ApiServer {
  
      this._express.use(session(require(__dirname + '/config/session.js')(sessionStore)));
      */
-    this._express.use(passport.initialize());
-    this._express.use(passport.session());
-
-    passport.use('local-signup', require('/home/marco/api.scambiolibri/strategies/local-signup.js')(this._database.User));
-    passport.use('local-login', require('/home/marco/api.scambiolibri/strategies/local-login.js')(this._database.User));
-    passport.serializeUser(require('/home/marco/api.scambiolibri/strategies/serializeUser.js'));
-    passport.deserializeUser(require('/home/marco/api.scambiolibri/strategies/deserializeUser.js')(this._database.User));
+    this._express.use(passport.initialize())
+    this._express.use(passport.session())
+    passportModule.configure(passport, this._database.User)
 
     this._express.use((req: MyRequest, res, next) => {
       req.sequelize = this._database
