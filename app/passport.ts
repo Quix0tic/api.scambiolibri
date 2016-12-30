@@ -4,13 +4,18 @@ var crypto = require('crypto');
 import { Strategy as LocalStrategy } from 'passport-local'
 
 export function configure(passport: passport.Passport, User: UserModel) {
-  passport.serializeUser((user:any, done) => done(null, user.id))
-  passport.deserializeUser((id:any, done) => {
+  passport.serializeUser((user: any, done) => done(null, user.id))
+  passport.deserializeUser((id: any, done) => {
     User.findById(id).then(foundUser => {
       if (!foundUser) { return done(new Error('user not found'), false) }
       return done(null, foundUser)
     })
   })
+
+  //////////////////////
+  //  SIGNUP STRATEGY //
+  //////////////////////
+
   passport.use("local-signup", new LocalStrategy({
     usernameField: 'phone',
     passwordField: 'password',
@@ -38,12 +43,43 @@ export function configure(passport: passport.Passport, User: UserModel) {
           });
         });
       } else { // User already registered
-        console.info("ERROR if-else")
+        console.info("User already registered")
         return done(null, false);
       }
     }, function (err) {
       console.info("ERROR while searching")
       return done(err);
     });
+  }))
+
+  //////////////////////
+  //  LOGIN STRATEGY  //
+  //////////////////////
+
+  passport.use('local-login', new LocalStrategy({
+    usernameField: 'phone',
+    passwordField: 'password',
+    passReqToCallback: true
+  }, function (req: any, phone: string, password: string, done: any) {
+    User.findByPrimary(phone).then(function (foundUser: any) {
+      if (foundUser) { // User is found
+        crypto.pbkdf2(password, foundUser.passwordHashSalt, 4096, 512, 'sha256', function (err: any, generatedHash: any) {
+          if (err) {
+            return done(err);
+          } // Error in generating hash
+          if (generatedHash.toString('hex') == foundUser.passwordHash.toString('hex')) {
+            return done(null, foundUser);
+          } else {
+            return done(null, false);
+          }
+        });
+      } else { // User is not found
+        console.info("User not found")
+        return done(null, false);
+      }
+    }, function (err) {
+      console.info("ERROR while searching")
+      return done(err);
+    })
   }))
 }

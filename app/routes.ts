@@ -16,13 +16,13 @@ var uuid = require("node-uuid");
 var passport = require('passport');
 
 
+router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
+    var _city = req.params.city;
+
     //////////////////////////////////
     //  GET /announcements/:city    //
     //////////////////////////////////
-    
-router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
-    var _city = req.params.city;
-    //restituisci gli annunci della città
+
     req.sequelize.Announcement.findAll({
         attributes: ["uuid", "title", "isbn", "price"],
         where: {
@@ -34,10 +34,10 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
 })
 router.route("/announcements")
 
-    /////////////////////////
-    //  GET /announcements //
-    /////////////////////////
-    
+    //////////////////////////
+    //  GET /announcements  //
+    //////////////////////////
+
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         //restituisci tutti gli annunci
         req.sequelize.Announcement.findAll({ attributes: ["uuid", "title", "isbn", "price", "city"] }).then(function (data) {
@@ -49,7 +49,7 @@ router.route("/announcements")
     //////////////////////////
     //  POST /announcements //
     //////////////////////////
-    
+
     .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
     function (req: MyRequest, res, next: express.NextFunction) {
         //inserisci annuncio
@@ -62,10 +62,10 @@ router.route("/announcements")
     })
 router.route("/announcement/:uuid")
 
-    ///////////////////////////////
-    //  GET /announcement/:uuid  //
-    ///////////////////////////////
-    
+    //////////////////////////////
+    //  GET /announcement/:uuid //
+    //////////////////////////////
+
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
             if (data) {
@@ -76,9 +76,9 @@ router.route("/announcement/:uuid")
         }, e => next(e))
     })
 
-    ///////////////////////////////
-    //  PUT /announcement/:uuid  //
-    ///////////////////////////////
+    //////////////////////////////
+    //  PUT /announcement/:uuid //
+    //////////////////////////////
 
     .put(function (req: MyRequest, res, next: express.NextFunction) {
         //Edit announcement
@@ -106,20 +106,23 @@ router.route("/announcement/:uuid")
     })
 
 
-    ///////////////////
-    //  POST /login  //
-    ///////////////////
-
 router.post("/login", function (req: MyRequest, res, next: express.NextFunction) {
 
+    //////////////////
+    //  POST /login //
+    //////////////////
+
+    passport.authenticate('local-login', function (err: any, user: UserInstance) {
+
+    })(req, res, next);
 })
 
-    /////////////////////
-    //  POST /signup   //
-    /////////////////////
-
 router.post("/signup", function (req: MyRequest, res, next: express.NextFunction) {
-    //nuovo user
+
+    //////////////////////
+    //  POST /signup    //
+    //////////////////////
+
     passport.authenticate('local-signup', function (err: any, user: UserInstance) {
         if (err) {
             res.status(400).json({ error: true, message: err });
@@ -137,9 +140,9 @@ router.post("/signup", function (req: MyRequest, res, next: express.NextFunction
 })
 router.route("/user/:phone")
 
-    /////////////////////////
-    //  PUT /user/:phone   //
-    /////////////////////////
+    //////////////////////////
+    //  PUT /user/:phone    //
+    //////////////////////////
 
     .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Edit user
@@ -159,9 +162,9 @@ router.route("/user/:phone")
         }, e => next(e))
     })
 
-    /////////////////////////
-    //  GET /user/:phone   //
-    /////////////////////////
+    //////////////////////////
+    //  GET /user/:phone    //
+    //////////////////////////
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         //Edit user
@@ -181,11 +184,13 @@ router.route("/user/:phone")
         }, e => next(e))
     })
 
-/////////////////////////
-//  PUT /user/:phone   //
-/////////////////////////
 
 router.get("/users", function (req: MyRequest, res, next: express.NextFunction) {
+
+    //////////////////////////
+    //  PUT /user/:phone    //
+    //////////////////////////
+
     req.sequelize.User.findAll({ attributes: ["name", "phone"] }).then(function (data) {
         res.status(200).json(data)
     }, e => next(e))
