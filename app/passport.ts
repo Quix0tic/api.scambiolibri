@@ -5,8 +5,8 @@ import { Strategy as LocalStrategy } from 'passport-local'
 
 export function configure(passport: passport.Passport, User: UserModel) {
   passport.serializeUser((user: UserInstance, done) => done(null, user.get().phone))
-  passport.deserializeUser((id: any, done) => {
-    User.findById(id).then(foundUser => {
+  passport.deserializeUser((phone: any, done) => {
+    User.findByPrimary(phone).then(foundUser => {
       if (!foundUser) { return done(new Error('user not found'), false) }
       return done(null, foundUser)
     })
