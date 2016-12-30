@@ -23,7 +23,7 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
     //////////////////////////////////
 
     req.sequelize.Announcement.findAll({
-      attributes["uuid","title","isbn","subject","notes","price","phone"],
+        attributes["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
         where: {
             city: _city
         }
@@ -39,7 +39,7 @@ router.route("/announcements")
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findAll({
-          attributes["uuid","title","isbn","subject","notes","price","phone"]
+            attributes["uuid", "title", "isbn", "subject", "notes", "price", "phone"]
         }).then(function (data) {
             res.status(200)
                 .json(data)
@@ -70,7 +70,7 @@ router.route("/announcement/:uuid")
             if (data) {
                 res.status(200).json(data)
             } else {
-                res.status(400).json(data)
+                res.status(400).json({error:true, message:'Nessun annuncio trovato'})
             }
         }, e => next(e))
     })
@@ -92,6 +92,8 @@ router.route("/announcement/:uuid")
                 } else {
                     res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
                 }
+            } else {
+                res.status(400).json({error:true, message:'Nessun annuncio trovato'})
             }
         }, e => next(e))
     })
@@ -113,6 +115,8 @@ router.route("/announcement/:uuid")
                 } else {
                     res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
                 }
+            } else {
+                res.status(400).json({error:true, message:'Nessun annuncio trovato'})
             }
         }, e => next(e))
     })
@@ -180,15 +184,17 @@ router.route("/user/:phone")
         //Edit user
         req.sequelize.User.findByPrimary(req.params.phone).then(function (data) {
             if (data) {
-                if (req.params.phone==req.user.get().phone){
+                if (req.params.phone == req.user.get().phone) {
                     data.update(req.body).then(function () {
                         res.json({
                             error: false
                         })
                     }, e => next(e))
-                }else {
+                } else {
                     res.status(403).json({ error: true, message: 'Non puoi modificare account altrui!' })
                 }
+            } else {
+                res.status(400).json({ error: true, message: 'Nessun user trovato' })
             }
         }, e => next(e))
     })
@@ -206,11 +212,9 @@ router.route("/user/:phone")
             }
         }).then(function (data) {
             if (data) {
-                data.update(req.body).then(function () {
-                    res.json({
-                        error: false
-                    })
-                }, e => next(e))
+                res.status(200).json(data)
+            } else {
+                res.status(400).json({})
             }
         }, e => next(e))
     })
