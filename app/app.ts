@@ -46,18 +46,21 @@ export class ApiServer {
 
   public start = async () => {
     this._express.use(bodyParser.json())
-/*
+
     var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
     // configure express
     this._express.use(cookieParser())
     this._express.use(session({
-      secret: 'keyboard cat',
-      store: new SequelizeStore({
-        db: this._database
-      }),
-      resave: false, // we support the touch method so per the express-session docs this should be set to false 
-      proxy: true // if you do SSL outside of node.
+        secret: 'thisIsReallySecret', // This is the key used to encrypt cookies
+        cookie: {
+            secure: true,
+            maxAge: 1000 * 60 * 60 * 24 * 30
+        },
+        resave: false, // Don't enable (will break with sequelize)
+        saveUninitialized: true, // Need to be enabled to use flashes
+        store: SequelizeStore,
+        proxy: true
     }))
 
     
@@ -66,7 +69,7 @@ export class ApiServer {
      });
  
      this._express.use(session(require(__dirname + '/config/session.js')(sessionStore)));
-     */
+     
     this._express.use(passport.initialize())
     this._express.use(passport.session())
     passportModule.configure(passport, this._database.User)

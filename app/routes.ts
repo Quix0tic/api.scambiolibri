@@ -123,7 +123,7 @@ router.post("/login", function (req: MyRequest, res, next: express.NextFunction)
             if(err){
                 return next(err);
             }
-            return res.status(200).json({error:false, message:"Registrazione avvenuta"});
+            return res.status(200).json({error:false, message:"Login riuscito"});
         })
     })(req, res, next);
 })
