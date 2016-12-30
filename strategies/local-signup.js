@@ -1,33 +1,33 @@
 // Signup strategy
 var LocalStrategy = require('passport-local');
 var crypto = require('crypto');
-module.exports = function(User) {
+module.exports = function (User) {
     var signUpStrategy = new LocalStrategy({
-        usernameField : 'phone',
-        passwordField : 'password',
+        usernameField: 'phone',
+        passwordField: 'password',
         passReqToCallback: true
-    }, function(req, phone, password, done) {
+    }, function (req, phone, password, done) {
         User.findOne({
-            attributes:{uuid,phone},
+            attributes: ["uuid", "phone"],
             where: {
                 phone: phone
             }
-        }).then(function(foundUser) {
+        }).then(function (foundUser) {
             if (!foundUser) { // User not found
-                crypto.randomBytes(32, function(err, generatedSalt) {
+                crypto.randomBytes(32, function (err, generatedSalt) {
                     if (err) {
                         return done(err);
                     }
-                    crypto.pbkdf2(password, generatedSalt, 4096, 512, 'sha256', function(err, generatedHash) {
+                    crypto.pbkdf2(password, generatedSalt, 4096, 512, 'sha256', function (err, generatedHash) {
                         User.create({
                             phone: phone,
                             name: req.body.name,
                             passwordHash: generatedHash,
                             passwordHashSalt: generatedSalt,
                             city: req.body.city
-                        }).then(function(createdUser) {
+                        }).then(function (createdUser) {
                             return done(null, createdUser);
-                        }, function(err) {
+                        }, function (err) {
                             return done(null, false);
                         });
                     });
@@ -35,7 +35,7 @@ module.exports = function(User) {
             } else { // User already registered
                 return done(null, false);
             }
-        }, function(err) {
+        }, function (err) {
             return done(err);
         });
     });
