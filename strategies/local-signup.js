@@ -10,7 +10,7 @@ module.exports = function (User) {
         User.findOne({
             attributes: ["uuid", "phone"],
             where: {
-                phone: phone
+                phone: req.body.phone
             }
         }).then(function (foundUser) {
             if (!foundUser) { // User not found
@@ -20,7 +20,7 @@ module.exports = function (User) {
                     }
                     crypto.pbkdf2(password, generatedSalt, 4096, 512, 'sha256', function (err, generatedHash) {
                         User.create({
-                            phone: phone,
+                            phone: req.body.phone,
                             name: req.body.name,
                             passwordHash: generatedHash,
                             passwordHashSalt: generatedSalt,
