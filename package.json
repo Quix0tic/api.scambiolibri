@@ -39,6 +39,7 @@
     "reflect-metadata": "^0.1.8",
     "sequelize": "^3.28.0",
     "sqlite": "^2.2.4",
+    "sqlite3": "^3.1.8",
     "tslint": "^3.15.1",
     "typescript": "^2.1.4"
   }

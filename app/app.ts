@@ -67,8 +67,6 @@ export class ApiServer {
      var sessionStore = require('connect-session-sequelize')({
        db: this._database
      });
- 
-     this._express.use(session(require(__dirname + '/config/session.js')(sessionStore)));
      
     this._express.use(passport.initialize())
     this._express.use(passport.session())
