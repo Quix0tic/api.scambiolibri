@@ -27,7 +27,9 @@ export class ApiServer {
   public constructor(port: number) {
     this._port = port
 
-    //crea l'istanza del db
+    ////////////////
+    //  DATABASE  //
+    ////////////////
     this._database = new SequelizeModule.SequelizeDatabase((process.env.NODE_ENV === 'production') ? {
       username: process.env.POSTGRES_USER || 'postgres',
       password: process.env.POSTGRES_PASSWORD || '',
@@ -45,39 +47,50 @@ export class ApiServer {
   }
 
   public start = async () => {
+    ////////////////
+    //  JSON BODY //
+    ////////////////
     this._express.use(bodyParser.json())
 
-    var SequelizeStore = require('connect-session-sequelize')(session.Store);
-
+    ////////////////////
+    //  SESSION STORE //
+    ////////////////////  
+    var sessionStore = require('connect-session-sequelize')({
+      db: this._database
+    });
+    sessionStore.sync();
     // configure express
     this._express.use(cookieParser())
     this._express.use(session({
-        secret: 'thisIsReallySecret', // This is the key used to encrypt cookies
-        cookie: {
-            secure: true,
-            maxAge: 1000 * 60 * 60 * 24 * 30
-        },
-        resave: false, // Don't enable (will break with sequelize)
-        saveUninitialized: true, // Need to be enabled to use flashes
-        store: SequelizeStore,
-        proxy: true
+      secret: 'thisIsReallySecret', // This is the key used to encrypt cookies
+      cookie: {
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 30
+      },
+      resave: false, // Don't enable (will break with sequelize)
+      saveUninitialized: true, // Need to be enabled to use flashes
+      store: sessionStore,
+      proxy: true
     }))
 
-    
-     var sessionStore = require('connect-session-sequelize')({
-       db: this._database
-     });
-     
+    ////////////////
+    //  PASSPORT  //
+    ////////////////
     this._express.use(passport.initialize())
     this._express.use(passport.session())
     passportModule.configure(passport, this._database.User)
 
+    //////////////////
+    //  MIDDLEWARE  //
+    //////////////////
     this._express.use((req: MyRequest, res, next) => {
       req.sequelize = this._database
       next()
     })
     this._express.use('/', router)
-    // 404 handler
+    //////////////////
+    //  404 handler //
+    //////////////////
     this._express.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
       return res.status(404).json({
         error: true,
