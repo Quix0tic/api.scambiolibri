@@ -31,6 +31,7 @@ module.exports = function (User) {
                 return done(null, false);
             }
         }, function (err) {
+            console.info("ERROR")
             return done(err);
         });
     });
