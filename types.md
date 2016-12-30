@@ -39,5 +39,7 @@ interface User {
   name: string;
   phone: string;
   city: string;
+  updatedAt: Date;
+  createdAt: Date;
 }
 ```
