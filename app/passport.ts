@@ -32,14 +32,17 @@ export function configure(passport: passport.Passport, User: UserModel) {
             }).then(function (createdUser) {
               return done(null, createdUser);
             }, function (err) {
+              console.info("ERROR signing-up")
               return done(null, false);
             });
           });
         });
       } else { // User already registered
+        console.info("ERROR foundUser")
         return done(null, false);
       }
     }, function (err) {
+      console.info("ERROR while searching")
       return done(err);
     });
   }))
