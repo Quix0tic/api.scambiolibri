@@ -5,7 +5,7 @@ import * as SequelizeModule from './models'
 import * as debug from 'debug'
 import * as passportModule from "./passport"
 var session = require('express-session');
-//var SeqStore = require('connect-session-sequelize')(session.Store);
+let SequelizeStore = require('connect-session-sequelize')(session.Store)
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
 import { router } from './routes'
@@ -52,34 +52,24 @@ export class ApiServer {
     //  JSON BODY //
     ////////////////
     this._express.use(bodyParser.json())
-    this._express.use(cookieParser())
+    this._express.use(cookieParser('thisIsReallySecret'))
 
     ////////////////////
     //  SESSION STORE //
     ////////////////////  
-    /*
-        var sessionStore = SequelizeStore({
-          db: this._database,
-          table: this._database.User
-        });
-        sessionStore.sync();
-    
-        this._express.use(session(function (sessionStore) {
-          var sessionConfig = {
-            secret: 'thisIsReallySecret', // This is the key used to encrypt cookies
-            cookie: {
-              secure: true,
-              maxAge: 1000 * 60 * 60 * 24 * 30
-            },
-            resave: false, // Don't enable (will break with sequelize)
-            saveUninitialized: true, // Need to be enabled to use flashes
-            store: sessionStore,
-            proxy: true
-          }
-          return sessionConfig;
-        }
-          (sessionStore)));
-    */
+    this._express.use(session({
+      secret: 'thisIsReallyASecret',
+      saveUninitialized: false,
+      resave: false,
+      store: new SequelizeStore({
+        db: this._database.db
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        secure: process.env.NODE_ENV === 'production'
+      },
+      proxy: true
+    }))
 
     // configure express
     this._express.use(session({
