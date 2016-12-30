@@ -27,7 +27,7 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
         where: {
             city: _city
         },
-        order: ['createdAt', 'DESC']
+        order: [['createdAt', 'DESC']]
     }).then(function (data) {
         res.status(200).json(data)
     }, e => next(e))
@@ -41,7 +41,7 @@ router.route("/announcements")
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findAll({
             attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
-            order: ['createdAt', 'DESC']
+            order: [['createdAt', 'DESC']]
         }).then(function (data) {
             res.status(200)
                 .json(data)
@@ -80,7 +80,7 @@ router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, 
 
     req.sequelize.Announcement.findAll({
         where: { phone: req.user.get().phone },
-        order: ['createdAt', 'DESC']
+        order: [['createdAt', 'DESC']]
     })
         .then(function (data) {
             res.status(200).json(data)
