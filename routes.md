@@ -48,8 +48,8 @@ This route is used to delete the announcement with the specified `uuid`
 ## GET /user/:phone
 This route is used to get the user with the specified `phone` number.
 
-## PUT /user/:phone
+## PUT /user
 _Need login_
 
-This route is used to edit the user with the specified `phone` number.
+This route is used to edit the user (cookies needed).
 > Returns:  `boolean`
