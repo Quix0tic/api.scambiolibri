@@ -24,6 +24,7 @@
     "@types/express-session": "0.0.32",
     "@types/node": "0.0.2",
     "@types/passport": "^0.3.0",
+    "@types/passport-local": "^1.0.29",
     "@types/sequelize": "^4.0.39",
     "body-parser": "^1.15.2",
     "connect-session-sequelize": "^4.1.0",

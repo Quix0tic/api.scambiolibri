@@ -1,11 +1,11 @@
 import * as passport from 'passport'
 import { UserModel } from './models'
 var crypto = require('crypto');
-var LocalStrategy = require('passport-local');
+import { Strategy as LocalStrategy } from 'passport-local'
 
 export function configure(passport: passport.Passport, User: UserModel) {
-  passport.serializeUser((user: any, done) => done(null, user.id))
-  passport.deserializeUser((id: number, done) => {
+  passport.serializeUser((user:any, done) => done(null, user.id))
+  passport.deserializeUser((id:any, done) => {
     User.findById(id).then(foundUser => {
       if (!foundUser) { return done(new Error('user not found'), false) }
       return done(null, foundUser)
@@ -38,7 +38,7 @@ export function configure(passport: passport.Passport, User: UserModel) {
           });
         });
       } else { // User already registered
-        console.info("ERROR foundUser")
+        console.info("ERROR if-else")
         return done(null, false);
       }
     }, function (err) {
