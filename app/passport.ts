@@ -1,7 +1,7 @@
 import * as passport from 'passport'
 import { UserModel } from './models'
 var crypto = require('crypto');
-var passport_local = require('passport-local');
+var LocalStrategy = require('passport-local');
 
 export function configure(passport: passport.Passport, User: UserModel) {
   passport.serializeUser((user: any, done) => done(null, user.id))
@@ -11,7 +11,7 @@ export function configure(passport: passport.Passport, User: UserModel) {
       return done(null, foundUser)
     })
   })
-  passport.use("local-signup", new passport_local.LocalStrategy({
+  passport.use("local-signup", new LocalStrategy({
     usernameField: 'phone',
     passwordField: 'password',
     passReqToCallback: true
