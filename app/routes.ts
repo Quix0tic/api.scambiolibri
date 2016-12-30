@@ -15,7 +15,6 @@ export var router = express.Router();
 var uuid = require("node-uuid");
 var passport = require('passport');
 
-
 router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
     var _city = req.params.city;
 
@@ -24,7 +23,7 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
     //////////////////////////////////
 
     req.sequelize.Announcement.findAll({
-        attributes: ["uuid", "title", "isbn", "price"],
+        attributes: ["uuid", "title", "isbn", "notes", "price"],
         where: {
             city: _city
         }
@@ -39,21 +38,19 @@ router.route("/announcements")
     //////////////////////////
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
-        //restituisci tutti gli annunci
-        req.sequelize.Announcement.findAll({ attributes: ["uuid", "title", "isbn", "price", "city"] }).then(function (data) {
+        req.sequelize.Announcement.findAll({ attributes: ["uuid", "title", "isbn", "notes", "price", "city"] }).then(function (data) {
             res.status(200)
                 .json(data)
         }, e => next(e))
     })
 
-    //////////////////////////
-    //  POST /announcements //
-    //////////////////////////
-
-    .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
+    //////////////////////////      //
+    //  POST /announcements //      //  NEED LOGIN
+    //////////////////////////      //
+    .post(checkLoggedIn, checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price"]),
     function (req: MyRequest, res, next: express.NextFunction) {
         //inserisci annuncio
-        req.sequelize.Announcement.create(req.body)
+        req.sequelize.Announcement.create(req.body + { city: req.user.get().city, phone: req.user.get().phone })
             .then(function (data) {
                 res.status(200).json({
                     error: false,
@@ -80,18 +77,22 @@ router.route("/announcement/:uuid")
     //  PUT /announcement/:uuid //      //  NEED LOGIN
     //////////////////////////////      //
 
-    .put(function (req: MyRequest, res, next: express.NextFunction) {
+    .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Edit announcement
         req.sequelize.Announcement.findByPrimary(req.params.uuid, {
             where: {}
         }).then(function (data) {
             if (data) {     //Announcio trovato
-                data.update(req.body).then(function (data) {
-                    res.status(200).json({
-                        error: false,
-                        announcement: data
-                    })
-                }, e => next(e))
+                if (data.get().phone == req.user.get().phone) { //L'utente sta modificando un suo annuncio
+                    data.update(req.body).then(function (data) {
+                        res.status(200).json({
+                            error: false,
+                            announcement: data
+                        })
+                    }, e => next(e))
+                } else {
+                    res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
+                }
             }
         }, e => next(e))
     })
@@ -102,8 +103,18 @@ router.route("/announcement/:uuid")
 
     .delete(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Remove announcement
-        req.sequelize.Announcement.destroy({ where: { uuid: req.params.uuid } }).then(function (announcementsRemoved) {
-            res.status(200).json({ error: false })
+        req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
+            if (data) {
+                if (data.get().phone == req.user.get().phone) {
+                    data.destroy().then(function () {
+                        res.status(200).json({
+                            error: false
+                        })
+                    }, e => next(e))
+                } else {
+                    res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
+                }
+            }
         }, e => next(e))
     })
 
@@ -151,26 +162,31 @@ router.post("/signup", function (req: MyRequest, res, next: express.NextFunction
         });
     })(req, res, next);
 })
+router.post('/logout', checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
+
+    //////////////////////
+    //  POST /logout    //
+    //////////////////////
+
+    req.logout();
+})
+
 router.route("/user/:phone")
 
-    //////////////////////////
-    //  PUT /user/:phone    //
-    //////////////////////////
+    //////////////////////////      //
+    //  PUT /user/:phone    //      //  NEED LOGIN
+    //////////////////////////      //
 
     .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Edit user
-        req.sequelize.User.findOne({
-            where: {
-                attributes: ["uuid", "name", "phone", "city"],
-                phone: req.params.phone
-            }
-        }).then(function (data) {
+        req.sequelize.User.findByPrimary(req.params.phone).then(function (data) {
             if (data) {
-                data.update(req.body).then(function () {
-                    res.json({
-                        error: false
-                    })
-                }, e => next(e))
+                if ()
+                    data.update(req.body).then(function () {
+                        res.json({
+                            error: false
+                        })
+                    }, e => next(e))
             }
         }, e => next(e))
     })
@@ -200,9 +216,9 @@ router.route("/user/:phone")
 
 router.get("/users", function (req: MyRequest, res, next: express.NextFunction) {
 
-    //////////////////////////
-    //  PUT /user/:phone    //
-    //////////////////////////
+    //////////////////
+    //  GET /users  //
+    //////////////////
 
     req.sequelize.User.findAll({ attributes: ["name", "phone"] }).then(function (data) {
         res.status(200).json(data)
