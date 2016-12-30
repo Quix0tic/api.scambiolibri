@@ -172,52 +172,51 @@ router.post('/logout', checkLoggedIn, function (req: MyRequest, res, next: expre
     //////////////////////
 
     req.logout();
+    res.status(200).json({error:false})
 })
 
-router.route("/user/:phone")
+///////////////////      //
+//  PUT /user    //      //  NEED LOGIN
+///////////////////      //
 
-    //////////////////////////      //
-    //  PUT /user/:phone    //      //  NEED LOGIN
-    //////////////////////////      //
-
-    .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
-        //Edit user
-        req.sequelize.User.findByPrimary(req.params.phone).then(function (data) {
-            if (data) {
-                if (req.params.phone == req.user.get().phone) {
-                    data.update(req.body).then(function () {
-                        res.json({
-                            error: false
-                        })
-                    }, e => next(e))
-                } else {
-                    res.status(403).json({ error: true, message: 'Non puoi modificare account altrui!' })
-                }
+router.put("/user", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
+    //Edit user
+    req.sequelize.User.findByPrimary(req.params.phone).then(function (data) {
+        if (data) {
+            if (req.params.phone == req.user.get().phone) {
+                data.update(req.body).then(function () {
+                    res.json({
+                        error: false
+                    })
+                }, e => next(e))
             } else {
-                res.status(400).json({ error: true, message: 'Nessun user trovato' })
+                res.status(403).json({ error: true, message: 'Non puoi modificare account altrui!' })
             }
-        }, e => next(e))
-    })
+        } else {
+            res.status(400).json({ error: true, message: 'Nessun user trovato' })
+        }
+    }, e => next(e))
+})
 
-    //////////////////////////
-    //  GET /user/:phone    //
-    //////////////////////////
+//////////////////////////
+//  GET /user/:phone    //
+//////////////////////////
 
-    .get(function (req: MyRequest, res, next: express.NextFunction) {
-        //Edit user
-        req.sequelize.User.findOne({
-            attributes: ["uuid", "name", "phone", "city", "updatedAt", "createdAt"],
-            where: {
-                phone: req.params.phone
-            }
-        }).then(function (data) {
-            if (data) {
-                res.status(200).json(data)
-            } else {
-                res.status(400).json({})
-            }
-        }, e => next(e))
-    })
+router.get("/user/:phone", function (req: MyRequest, res, next: express.NextFunction) {
+    //Edit user
+    req.sequelize.User.findOne({
+        attributes: ["uuid", "name", "phone", "city", "updatedAt", "createdAt"],
+        where: {
+            phone: req.params.phone
+        }
+    }).then(function (data) {
+        if (data) {
+            res.status(200).json(data)
+        } else {
+            res.status(400).json({})
+        }
+    }, e => next(e))
+})
 
 
 router.get("/users", function (req: MyRequest, res, next: express.NextFunction) {
