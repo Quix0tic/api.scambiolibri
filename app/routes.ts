@@ -59,6 +59,19 @@ router.route("/announcements")
                 })
             }, e => next(e))
     })
+
+router.get("/announcements/user", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
+
+    //////////////////////////////      //
+    //  GET /announcements/user //      //  NEED LOGIN
+    //////////////////////////////      //
+
+    req.sequelize.Announcement.findAll({ where: { phone: req.user.get().phone } })
+        .then(function (data) {
+            res.status(200).json(data)
+        }, e => next(e))
+})
+
 router.route("/announcement/:uuid")
 
     //////////////////////////////
@@ -122,7 +135,7 @@ router.route("/announcement/:uuid")
     })
 
 
-router.post("/login", function (req: MyRequest, res, next: express.NextFunction) {
+router.post("/login", checkParams(["phone", "password"]), function (req: MyRequest, res, next: express.NextFunction) {
 
     //////////////////
     //  POST /login //
@@ -144,7 +157,7 @@ router.post("/login", function (req: MyRequest, res, next: express.NextFunction)
     })(req, res, next);
 })
 
-router.post("/signup", function (req: MyRequest, res, next: express.NextFunction) {
+router.post("/signup", checkParams(["name", "phone", "password", "city"]), function (req: MyRequest, res, next: express.NextFunction) {
 
     //////////////////////
     //  POST /signup    //

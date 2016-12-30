@@ -27,6 +27,10 @@ This route is used to create a new announcement
 This route is used to get all announcements in a specific `city`.
 > Returns: [`ShortAnnouncement[]`](types#announcement)
 
+## GET /announcements/user
+This route is used to get all announcements of user (cookies needed).
+> Returns: [`ShortAnnouncement[]`](types#announcement)
+
 ## GET /announcement/:uuid
 This route is used to get the announcement with the specified `uuid`
 > Returns:  [`Announcement`](types#announcement)
