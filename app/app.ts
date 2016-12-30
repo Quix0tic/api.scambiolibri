@@ -55,7 +55,7 @@ export class ApiServer {
     ////////////////////
     //  SESSION STORE //
     ////////////////////  
-    var SequelizeStore = require('connect-session-sequelize')(session.Store);
+    var SequelizeStore = session.Store;
     // configure express
     this._express.use(cookieParser())
     this._express.use(session({
