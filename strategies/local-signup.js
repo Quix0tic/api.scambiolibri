@@ -8,6 +8,7 @@ module.exports = function(User) {
         passReqToCallback: true
     }, function(req, phone, password, done) {
         User.findOne({
+            attributes:{uuid,phone},
             where: {
                 phone: phone
             }
