@@ -129,13 +129,13 @@ export class SequelizeDatabase {
         try {
             await this.db.authenticate()
         } catch (error) {
+            return process.exit(1)
         }
     }
     private _init = async () => {
         try {
             await this.db.sync({ force: false })
         } catch (error) {
-
             return process.exit(1)
         }
     }
