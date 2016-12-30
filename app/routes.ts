@@ -125,7 +125,7 @@ router.post("/login", function (req: MyRequest, res, next: express.NextFunction)
             if (err) {
                 return next(err);
             }
-            return res.status(200).cookie('api.key', user).json({ error: false, message: "Login riuscito" });
+            return res.status(200).json({ error: false, message: "Login riuscito" });
         })
     })(req, res, next);
 })
@@ -147,7 +147,7 @@ router.post("/signup", function (req: MyRequest, res, next: express.NextFunction
             if (err) {
                 return next(err);
             }
-            return res.status(200).cookie('api.key', user).json({ error: false, message: 'Registrazione avvenuta' }) // User successfully signed up
+            return res.status(200).json({ error: false, message: 'Registrazione avvenuta' }) // User successfully signed up
         });
     })(req, res, next);
 })
