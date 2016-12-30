@@ -60,7 +60,7 @@ export class SequelizeDatabase {
                 allowNull: false
             },
             phone: {
-                type: Sequelize.STRING,
+                type: Sequelize.STRING(10),
                 unique: true,
                 allowNull: false
             },
