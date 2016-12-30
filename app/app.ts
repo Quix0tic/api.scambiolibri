@@ -48,6 +48,8 @@ export class ApiServer {
   }
 
   public start = async () => {
+    this._express.set('trust proxy', true)
+
     ////////////////
     //  JSON BODY //
     ////////////////
@@ -66,7 +68,7 @@ export class ApiServer {
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,
-        secure: false//process.env.NODE_ENV === 'production'
+        secure: process.env.NODE_ENV === 'production'
       },
       proxy: true
     }))
