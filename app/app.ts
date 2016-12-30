@@ -57,9 +57,10 @@ export class ApiServer {
     ////////////////////
     //  SESSION STORE //
     ////////////////////  
-
-    var sessionStore = SeqStore.SequelizeStore({
-      db: this._database
+/*
+    var sessionStore = SequelizeStore({
+      db: this._database,
+      table: this._database.User
     });
     sessionStore.sync();
 
@@ -78,11 +79,10 @@ export class ApiServer {
       return sessionConfig;
     }
       (sessionStore)));
+*/
 
-
-    /*var SequelizeStore = session.Store;
+    var SequelizeStore = session.Store;
     // configure express
-    this._express.use(cookieParser())
     this._express.use(session({
       secret: 'thisIsReallySecret', // This is the key used to encrypt cookies
       cookie: {
@@ -96,7 +96,7 @@ export class ApiServer {
       }),
       proxy: true
     }))
-*/
+
     ////////////////
     //  PASSPORT  //
     ////////////////
