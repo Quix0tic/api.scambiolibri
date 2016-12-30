@@ -3,11 +3,13 @@ var LocalStrategy = require('passport-local');
 var crypto = require('crypto');
 module.exports = function(User) {
     var signUpStrategy = new LocalStrategy({
+        usernameField : 'phone',
+        passwordField : 'password',
         passReqToCallback: true
-    }, function(req, username, password, done) {
+    }, function(req, phone, password, done) {
         User.findOne({
             where: {
-                username: username
+                phone: phone
             }
         }).then(function(foundUser) {
             if (!foundUser) { // User not found
@@ -17,12 +19,11 @@ module.exports = function(User) {
                     }
                     crypto.pbkdf2(password, generatedSalt, 4096, 512, 'sha256', function(err, generatedHash) {
                         User.create({
-                            username: username,
-                            firstName: req.body.first_name,
-                            lastName: req.body.last_name,
-                            email: req.body.email,
+                            phone: phone,
+                            name: req.body.name,
                             passwordHash: generatedHash,
-                            passwordHashSalt: generatedSalt
+                            passwordHashSalt: generatedSalt,
+                            city: req.body.city
                         }).then(function(createdUser) {
                             return done(null, createdUser);
                         }, function(err) {
