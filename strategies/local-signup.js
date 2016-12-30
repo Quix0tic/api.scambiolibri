@@ -7,7 +7,6 @@ module.exports = function (User) {
         passwordField: 'password',
         passReqToCallback: true
     }, function (req, phone, password, done) {
-        console.log(phone + "    " + req.body.phone);
         User.findByPrimary(phone).then(function (foundUser) {
             if (!foundUser) { // User not found
                 crypto.randomBytes(32, function (err, generatedSalt) {
@@ -16,8 +15,8 @@ module.exports = function (User) {
                     }
                     crypto.pbkdf2(password, generatedSalt, 4096, 512, 'sha256', function (err, generatedHash) {
                         User.create({
-                            phone: req.body.phone,
                             name: req.body.name,
+                            phone: phone,
                             passwordHash: generatedHash,
                             passwordHashSalt: generatedSalt,
                             city: req.body.city
