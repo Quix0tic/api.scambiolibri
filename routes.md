@@ -44,6 +44,7 @@ This route is used to update the announcement with the specified `uuid`
 ## DELETE /announcement/:uuid
 _Need Login_
 
+
 This route is used to delete the announcement with the specified `uuid`
 > Returns:  `boolean`
 
