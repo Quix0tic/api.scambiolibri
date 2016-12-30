@@ -4,7 +4,7 @@ import * as express from 'express'
 import * as SequelizeModule from './models'
 import * as debug from 'debug'
 import * as passportModule from "./passport"
-import * as session from 'express-session'
+var session = require('express-session')
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
 import { router } from './routes'
@@ -55,7 +55,8 @@ export class ApiServer {
     ////////////////////
     //  SESSION STORE //
     ////////////////////  
-    var sessionStore = require('connect-session-sequelize')(session.Store);
+    var SequelizeStore = require('connect-session-sequelize')(session.Store);
+    SequelizeStore.sync();
     // configure express
     this._express.use(cookieParser())
     this._express.use(session({
@@ -66,7 +67,7 @@ export class ApiServer {
       },
       resave: false, // Don't enable (will break with sequelize)
       saveUninitialized: true, // Need to be enabled to use flashes
-      store: new sessionStore({
+      store: new SequelizeStore({
         db: this._database
       }),
       proxy: true
