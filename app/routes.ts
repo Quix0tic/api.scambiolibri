@@ -26,7 +26,8 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
         attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
         where: {
             city: _city
-        }
+        },
+        order: ['createdAt', 'DESC']
     }).then(function (data) {
         res.status(200).json(data)
     }, e => next(e))
@@ -39,7 +40,8 @@ router.route("/announcements")
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findAll({
-            attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"]
+            attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
+            order: ['createdAt', 'DESC']
         }).then(function (data) {
             res.status(200)
                 .json(data)
@@ -70,13 +72,16 @@ router.route("/announcements")
             }, e => next(e))
     })
 
-router.get("/announcements/user", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
+router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
 
     //////////////////////////////      //
     //  GET /announcements/user //      //  NEED LOGIN
     //////////////////////////////      //
 
-    req.sequelize.Announcement.findAll({ where: { phone: req.user.get().phone } })
+    req.sequelize.Announcement.findAll({
+        where: { phone: req.user.get().phone },
+        order: ['createdAt', 'DESC']
+    })
         .then(function (data) {
             res.status(200).json(data)
         }, e => next(e))
