@@ -81,7 +81,6 @@ export class ApiServer {
       (sessionStore)));
 */
 
-    var SequelizeStore = session.Store;
     // configure express
     this._express.use(session({
       secret: 'thisIsReallySecret', // This is the key used to encrypt cookies
@@ -91,7 +90,7 @@ export class ApiServer {
       },
       resave: false, // Don't enable (will break with sequelize)
       saveUninitialized: true, // Need to be enabled to use flashes
-      store: new SequelizeStore({
+      store: new SeqStore.SequelizeStore({
         db: this._database
       }),
       proxy: true
