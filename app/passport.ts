@@ -1,10 +1,10 @@
 import * as passport from 'passport'
-import { UserModel } from './models'
+import { UserModel, UserInstance } from './models'
 var crypto = require('crypto');
 import { Strategy as LocalStrategy } from 'passport-local'
 
 export function configure(passport: passport.Passport, User: UserModel) {
-  passport.serializeUser((user: any, done) => done(null, user.id))
+  passport.serializeUser((user: UserInstance, done) => done(null, user.get().phone))
   passport.deserializeUser((id: any, done) => {
     User.findById(id).then(foundUser => {
       if (!foundUser) { return done(new Error('user not found'), false) }
