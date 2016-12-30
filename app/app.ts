@@ -66,7 +66,7 @@ export class ApiServer {
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,
-        secure: process.env.NODE_ENV === 'production'
+        secure: false//process.env.NODE_ENV === 'production'
       },
       proxy: true
     }))

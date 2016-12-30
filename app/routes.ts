@@ -76,13 +76,15 @@ router.route("/announcement/:uuid")
         }, e => next(e))
     })
 
-    //////////////////////////////
-    //  PUT /announcement/:uuid //
-    //////////////////////////////
+    //////////////////////////////      //
+    //  PUT /announcement/:uuid //      //  NEED LOGIN
+    //////////////////////////////      //
 
     .put(function (req: MyRequest, res, next: express.NextFunction) {
         //Edit announcement
-        req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
+        req.sequelize.Announcement.findByPrimary(req.params.uuid, {
+            where: {}
+        }).then(function (data) {
             if (data) {     //Announcio trovato
                 data.update(req.body).then(function (data) {
                     res.status(200).json({
@@ -94,9 +96,9 @@ router.route("/announcement/:uuid")
         }, e => next(e))
     })
 
-    //////////////////////////////////
-    //  DELETE /announcement/:uuid  //
-    //////////////////////////////////
+    //////////////////////////////////      //
+    //  DELETE /announcement/:uuid  //      //  NEED LOGIN
+    //////////////////////////////////      //
 
     .delete(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Remove announcement
@@ -119,11 +121,11 @@ router.post("/login", function (req: MyRequest, res, next: express.NextFunction)
         if (!user) {
             return res.status(401).json({ error: true, message: 'Login fallito' })
         } // User not signed up
-        req.login(user, function(err){
-            if(err){
+        req.login(user, function (err) {
+            if (err) {
                 return next(err);
             }
-            return res.status(200).json({error:false, message:"Login riuscito"});
+            return res.status(200).cookie('api.key', user).json({ error: false, message: "Login riuscito" });
         })
     })(req, res, next);
 })
@@ -145,7 +147,7 @@ router.post("/signup", function (req: MyRequest, res, next: express.NextFunction
             if (err) {
                 return next(err);
             }
-            return res.status(200).json({ error: false, message: 'Registrazione avvenuta' }) // User successfully signed up
+            return res.status(200).cookie('api.key', user).json({ error: false, message: 'Registrazione avvenuta' }) // User successfully signed up
         });
     })(req, res, next);
 })
