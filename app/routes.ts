@@ -52,7 +52,17 @@ router.route("/announcements")
     .post(checkLoggedIn, checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price"]),
     function (req: MyRequest, res, next: express.NextFunction) {
         //inserisci annuncio
-        req.sequelize.Announcement.create(req.body.push({ city: req.user.get().city, phone: req.user.get().phone }))
+        req.sequelize.Announcement.create({
+            title: req.body.title,
+            isbn: req.body.isbn,
+            subject: req.body.subject,
+            edition: req.body.edition,
+            grade: req.body.grade,
+            notes: req.body.notes,
+            price: req.body.price,
+            phone: req.user.get().phone,
+            city: req.user.get().city
+        })
             .then(function (data) {
                 res.status(200).json({
                     error: false,
