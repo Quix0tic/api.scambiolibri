@@ -5,7 +5,7 @@ import * as SequelizeModule from './models'
 import * as debug from 'debug'
 import * as passportModule from "./passport"
 var session = require('express-session');
-var SequelizeStore = require('connect-session-sequelize')(session.Store);
+var SeqStore = require('connect-session-sequelize')(session.Store);
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
 import { router } from './routes'
@@ -58,7 +58,7 @@ export class ApiServer {
     //  SESSION STORE //
     ////////////////////  
 
-    var sessionStore = SequelizeStore.SequelizeStore({
+    var sessionStore = SeqStore.SequelizeStore({
       db: this._database
     });
     sessionStore.sync();
