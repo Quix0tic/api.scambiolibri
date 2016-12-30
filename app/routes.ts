@@ -172,7 +172,7 @@ router.post('/logout', checkLoggedIn, function (req: MyRequest, res, next: expre
     //////////////////////
 
     req.logout();
-    res.status(200).json({error:false})
+    res.status(200).json({ error: false })
 })
 
 ///////////////////      //
@@ -181,17 +181,13 @@ router.post('/logout', checkLoggedIn, function (req: MyRequest, res, next: expre
 
 router.put("/user", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
     //Edit user
-    req.sequelize.User.findByPrimary(req.params.phone).then(function (data) {
+    req.sequelize.User.findByPrimary(req.user.get().phone).then(function (data) {
         if (data) {
-            if (req.params.phone == req.user.get().phone) {
-                data.update(req.body).then(function () {
-                    res.json({
-                        error: false
-                    })
-                }, e => next(e))
-            } else {
-                res.status(403).json({ error: true, message: 'Non puoi modificare account altrui!' })
-            }
+            data.update(req.body).then(function () {
+                res.json({
+                    error: false
+                })
+            }, e => next(e))
         } else {
             res.status(400).json({ error: true, message: 'Nessun user trovato' })
         }
