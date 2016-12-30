@@ -23,7 +23,7 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
     //////////////////////////////////
 
     req.sequelize.Announcement.findAll({
-        attributes["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
+        attributes:["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
         where: {
             city: _city
         }
@@ -39,7 +39,7 @@ router.route("/announcements")
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findAll({
-            attributes["uuid", "title", "isbn", "subject", "notes", "price", "phone"]
+            attributes:["uuid", "title", "isbn", "subject", "notes", "price", "phone"]
         }).then(function (data) {
             res.status(200)
                 .json(data)
