@@ -15,31 +15,15 @@ export var router = express.Router();
 var uuid = require("node-uuid");
 var passport = require('passport');
 
-router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
-    var _city = req.params.city;
-
-    //////////////////////////////////
-    //  GET /announcements/:city    //
-    //////////////////////////////////
-
-    req.sequelize.Announcement.findAll({
-        attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
-        where: {
-            city: _city
-        },
-        order: [['createdAt', 'DESC']]
-    }).then(function (data) {
-        res.status(200).json(data)
-    }, e => next(e))
-})
 router.route("/announcements")
 
     //////////////////////////
     //  GET /announcements  //
     //////////////////////////
 
-    .get(function (req: MyRequest, res, next: express.NextFunction) {
+    .get(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findAll({
+            where: { city: req.user.get().city },
             attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
             order: [['createdAt', 'DESC']]
         }).then(function (data) {
@@ -75,7 +59,7 @@ router.route("/announcements")
 router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
 
     //////////////////////////////      //
-    //  GET /announcements/user //      //  NEED LOGIN
+    //  GET /user/announcements //      //  NEED LOGIN
     //////////////////////////////      //
 
     req.sequelize.Announcement.findAll({
