@@ -12,13 +12,8 @@ module.exports = function(User) {
                 phone: phone
             }
         }).then(function(foundUser) {
-            /*if (!foundUser) { // User not found
-                
-            } else { // User already registered
-                req.flash('signup-error', 'Sorry. This username is already taken by someone else.');
-                return done(null, false);
-            }*/
-            crypto.randomBytes(32, function(err, generatedSalt) {
+            if (!foundUser) { // User not found
+                crypto.randomBytes(32, function(err, generatedSalt) {
                     if (err) {
                         return done(err);
                     }
@@ -32,14 +27,15 @@ module.exports = function(User) {
                         }).then(function(createdUser) {
                             return done(null, createdUser);
                         }, function(err) {
-                            //req.flash('signup-error', err);
                             return done(null, false);
                         });
                     });
                 });
+            } else { // User already registered
+                return done(null, false);
+            }
         }, function(err) {
-            
-            //return done(err);
+            return done(err);
         });
     });
     return signUpStrategy;
