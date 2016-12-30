@@ -95,12 +95,13 @@ router.post("/signup", function (req: MyRequest, res, next: express.NextFunction
         });
     })(req, res, next);
 })
-router.route("/user/:uuid")
+router.route("/user/:phone")
     .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Edit user
         req.sequelize.User.findOne({
+            attributes:["name", "phone", "city"],
             where: {
-                uuid: req.params.uuid
+                phone: req.params.phone
             }
         }).then(function (data) {
             if (data) {
