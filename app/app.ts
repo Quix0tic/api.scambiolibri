@@ -88,6 +88,13 @@ export class ApiServer {
       next()
     })
     this._express.use('/', router)
+    this._express.use('/logout', function (req, res, next) {
+      req.logout();
+      if (req.session)
+        req.session.destroy(function (err) {})
+      res.status(200).json({ error: false })
+
+    })
     //////////////////
     //  404 handler //
     //////////////////

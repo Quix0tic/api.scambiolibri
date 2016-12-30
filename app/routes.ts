@@ -193,15 +193,6 @@ router.post("/signup", checkParams(["name", "phone", "password", "city"]), funct
         });
     })(req, res, next);
 })
-router.post('/logout', checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
-
-    //////////////////////
-    //  POST /logout    //
-    //////////////////////
-
-    req.logout();
-    res.status(200).json({ error: false })
-})
 
 ///////////////////      //
 //  PUT /user    //      //  NEED LOGIN
