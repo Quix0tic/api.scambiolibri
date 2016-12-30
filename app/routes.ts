@@ -23,7 +23,6 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
     //////////////////////////////////
 
     req.sequelize.Announcement.findAll({
-        attributes: ["uuid", "title", "isbn", "notes", "price"],
         where: {
             city: _city
         }
@@ -38,7 +37,7 @@ router.route("/announcements")
     //////////////////////////
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
-        req.sequelize.Announcement.findAll({ attributes: ["uuid", "title", "isbn", "notes", "price", "city"] }).then(function (data) {
+        req.sequelize.Announcement.findAll().then(function (data) {
             res.status(200)
                 .json(data)
         }, e => next(e))
@@ -79,9 +78,7 @@ router.route("/announcement/:uuid")
 
     .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Edit announcement
-        req.sequelize.Announcement.findByPrimary(req.params.uuid, {
-            where: {}
-        }).then(function (data) {
+        req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
             if (data) {     //Announcio trovato
                 if (data.get().phone == req.user.get().phone) { //L'utente sta modificando un suo annuncio
                     data.update(req.body).then(function (data) {
@@ -105,7 +102,7 @@ router.route("/announcement/:uuid")
         //Remove announcement
         req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
             if (data) {
-                if (data.get().phone == req.user.get().phone) {
+                if (data.get().phone == req.user.get().phone) {//L'utente sta eliminando un suo annuncio
                     data.destroy().then(function () {
                         res.status(200).json({
                             error: false
