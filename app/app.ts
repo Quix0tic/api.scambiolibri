@@ -7,7 +7,6 @@ import * as passportModule from "./passport"
 import * as session from 'express-session'
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
-import { Sequelize } from 'sequelize'
 import { router } from './routes'
 var cookieParser = require('cookie-parser');
 
