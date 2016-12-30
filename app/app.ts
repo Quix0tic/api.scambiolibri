@@ -58,7 +58,7 @@ export class ApiServer {
     //  SESSION STORE //
     ////////////////////  
 
-    var sessionStore = new SequelizeStore({
+    var sessionStore = new SequelizeStore.SequelizeStore({
       db: this._database
     });
     sessionStore.sync();
