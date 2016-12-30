@@ -18,7 +18,6 @@ module.exports = function(User) {
                 req.flash('signup-error', 'Sorry. This username is already taken by someone else.');
                 return done(null, false);
             }*/
-        }, function(err) {
             crypto.randomBytes(32, function(err, generatedSalt) {
                     if (err) {
                         return done(err);
@@ -38,6 +37,8 @@ module.exports = function(User) {
                         });
                     });
                 });
+        }, function(err) {
+            
             //return done(err);
         });
     });
