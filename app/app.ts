@@ -71,22 +71,6 @@ export class ApiServer {
       proxy: true
     }))
 
-    // configure express
-    this._express.use(session({
-      secret: 'thisIsReallySecret', // This is the key used to encrypt cookies
-      cookie: {
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 30
-      },
-      resave: false, // Don't enable (will break with sequelize)
-      saveUninitialized: true, // Need to be enabled to use flashes
-      store: require('connect-session-sequelize')({
-        db: this._database,
-        table: this._database.User
-      }, session.Store),
-      proxy: true
-    }))
-
     ////////////////
     //  PASSPORT  //
     ////////////////
