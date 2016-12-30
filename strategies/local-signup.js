@@ -33,7 +33,7 @@ module.exports = function(User) {
                         }).then(function(createdUser) {
                             return done(null, createdUser);
                         }, function(err) {
-                            req.flash('signup-error', err);
+                            //req.flash('signup-error', err);
                             return done(null, false);
                         });
                     });
