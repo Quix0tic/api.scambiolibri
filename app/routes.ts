@@ -23,7 +23,7 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
     //////////////////////////////////
 
     req.sequelize.Announcement.findAll({
-        attributes:["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
+        attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
         where: {
             city: _city
         }
@@ -39,7 +39,7 @@ router.route("/announcements")
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findAll({
-            attributes:["uuid", "title", "isbn", "subject", "notes", "price", "phone"]
+            attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"]
         }).then(function (data) {
             res.status(200)
                 .json(data)
@@ -70,7 +70,7 @@ router.route("/announcement/:uuid")
             if (data) {
                 res.status(200).json(data)
             } else {
-                res.status(400).json({error:true, message:'Nessun annuncio trovato'})
+                res.status(400).json({ error: true, message: 'Nessun annuncio trovato' })
             }
         }, e => next(e))
     })
@@ -93,7 +93,7 @@ router.route("/announcement/:uuid")
                     res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
                 }
             } else {
-                res.status(400).json({error:true, message:'Nessun annuncio trovato'})
+                res.status(400).json({ error: true, message: 'Nessun annuncio trovato' })
             }
         }, e => next(e))
     })
@@ -116,7 +116,7 @@ router.route("/announcement/:uuid")
                     res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
                 }
             } else {
-                res.status(400).json({error:true, message:'Nessun annuncio trovato'})
+                res.status(400).json({ error: true, message: 'Nessun annuncio trovato' })
             }
         }, e => next(e))
     })
@@ -206,7 +206,7 @@ router.route("/user/:phone")
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         //Edit user
         req.sequelize.User.findOne({
-            attributes: ["uuid", "name", "phone", "city"],
+            attributes: ["uuid", "name", "phone", "city", "updatedAt", "createdAt"],
             where: {
                 phone: req.params.phone
             }
