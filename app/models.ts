@@ -61,7 +61,6 @@ export class SequelizeDatabase {
             },
             phone: {
                 type: Sequelize.STRING(10),
-                unique: true,
                 allowNull: false
             },
             passwordHash: {
