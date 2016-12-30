@@ -113,7 +113,18 @@ router.post("/login", function (req: MyRequest, res, next: express.NextFunction)
     //////////////////
 
     passport.authenticate('local-login', function (err: any, user: UserInstance) {
-
+        if (err) {
+            res.status(400).json({ error: true, message: err });
+        } // Error inside login strategy
+        if (!user) {
+            return res.status(401).json({ error: true, message: 'Login fallito' })
+        } // User not signed up
+        req.login(user, function(err){
+            if(err){
+                return next(err);
+            }
+            return res.status(200).json({error:false, message:"Registrazione avvenuta"});
+        })
     })(req, res, next);
 })
 
