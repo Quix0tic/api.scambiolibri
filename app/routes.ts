@@ -15,6 +15,11 @@ export var router = express.Router();
 var uuid = require("node-uuid");
 var passport = require('passport');
 
+
+    //////////////////////////////////
+    //  GET /announcements/:city    //
+    //////////////////////////////////
+    
 router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
     var _city = req.params.city;
     //restituisci gli annunci della città
@@ -28,6 +33,11 @@ router.get("/announcements/:city", function (req: MyRequest, res, next: express.
     }, e => next(e))
 })
 router.route("/announcements")
+
+    /////////////////////////
+    //  GET /announcements //
+    /////////////////////////
+    
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         //restituisci tutti gli annunci
         req.sequelize.Announcement.findAll({ attributes: ["uuid", "title", "isbn", "price", "city"] }).then(function (data) {
@@ -35,6 +45,11 @@ router.route("/announcements")
                 .json(data)
         }, e => next(e))
     })
+
+    //////////////////////////
+    //  POST /announcements //
+    //////////////////////////
+    
     .post(checkParams(["title", "isbn", "subject", "edition", "grade", "notes", "price", "phone", "city"]),
     function (req: MyRequest, res, next: express.NextFunction) {
         //inserisci annuncio
@@ -46,6 +61,11 @@ router.route("/announcements")
             }, e => next(e))
     })
 router.route("/announcement/:uuid")
+
+    ///////////////////////////////
+    //  GET /announcement/:uuid  //
+    ///////////////////////////////
+    
     .get(function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
             if (data) {
@@ -55,6 +75,11 @@ router.route("/announcement/:uuid")
             }
         }, e => next(e))
     })
+
+    ///////////////////////////////
+    //  PUT /announcement/:uuid  //
+    ///////////////////////////////
+
     .put(function (req: MyRequest, res, next: express.NextFunction) {
         //Edit announcement
         req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
@@ -68,6 +93,11 @@ router.route("/announcement/:uuid")
             }
         }, e => next(e))
     })
+
+    //////////////////////////////////
+    //  DELETE /announcement/:uuid  //
+    //////////////////////////////////
+
     .delete(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Remove announcement
         req.sequelize.Announcement.destroy({ where: { uuid: req.params.uuid } }).then(function (announcementsRemoved) {
@@ -75,9 +105,19 @@ router.route("/announcement/:uuid")
         }, e => next(e))
     })
 
+
+    ///////////////////
+    //  POST /login  //
+    ///////////////////
+
 router.post("/login", function (req: MyRequest, res, next: express.NextFunction) {
 
 })
+
+    /////////////////////
+    //  POST /signup   //
+    /////////////////////
+
 router.post("/signup", function (req: MyRequest, res, next: express.NextFunction) {
     //nuovo user
     passport.authenticate('local-signup', function (err: any, user: UserInstance) {
@@ -85,21 +125,48 @@ router.post("/signup", function (req: MyRequest, res, next: express.NextFunction
             res.status(400).json({ error: true, message: err });
         } // Error inside login strategy
         if (!user) {
-            return res.status(401).json({error: true, message:'Registrazione fallita'})
+            return res.status(401).json({ error: true, message: 'Registrazione fallita' })
         } // User not signed up
         req.login(user, function (err) {
             if (err) {
                 return next(err);
             }
-            return res.status(200).json({error:false, message:'Registrazione avvenuta'}) // User successfully signed up
+            return res.status(200).json({ error: false, message: 'Registrazione avvenuta' }) // User successfully signed up
         });
     })(req, res, next);
 })
 router.route("/user/:phone")
+
+    /////////////////////////
+    //  PUT /user/:phone   //
+    /////////////////////////
+
     .put(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         //Edit user
         req.sequelize.User.findOne({
-            attributes:["name", "phone", "city"],
+            where: {
+                attributes: ["uuid", "name", "phone", "city"],
+                phone: req.params.phone
+            }
+        }).then(function (data) {
+            if (data) {
+                data.update(req.body).then(function () {
+                    res.json({
+                        error: false
+                    })
+                }, e => next(e))
+            }
+        }, e => next(e))
+    })
+
+    /////////////////////////
+    //  GET /user/:phone   //
+    /////////////////////////
+
+    .get(function (req: MyRequest, res, next: express.NextFunction) {
+        //Edit user
+        req.sequelize.User.findOne({
+            attributes: ["uuid", "name", "phone", "city"],
             where: {
                 phone: req.params.phone
             }
@@ -113,8 +180,13 @@ router.route("/user/:phone")
             }
         }, e => next(e))
     })
+
+/////////////////////////
+//  PUT /user/:phone   //
+/////////////////////////
+
 router.get("/users", function (req: MyRequest, res, next: express.NextFunction) {
-    req.sequelize.User.findAll({attributes:["name", "phone"]}).then(function (data) {
+    req.sequelize.User.findAll({ attributes: ["name", "phone"] }).then(function (data) {
         res.status(200).json(data)
     }, e => next(e))
 })
