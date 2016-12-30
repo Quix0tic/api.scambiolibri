@@ -90,8 +90,9 @@ export class ApiServer {
       },
       resave: false, // Don't enable (will break with sequelize)
       saveUninitialized: true, // Need to be enabled to use flashes
-      store: new SeqStore.SequelizeStore({
-        db: this._database
+      store: SeqStore.SequelizeStore({
+        db: this._database,
+        table: this._database.User
       }),
       proxy: true
     }))
