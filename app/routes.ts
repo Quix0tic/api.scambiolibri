@@ -52,7 +52,7 @@ router.route("/announcements")
             .then(function (data) {
                 res.status(200).json({
                     error: false, 
-                    data:data
+                    announcement:data
                 })
             }, e => next(e))
     })
@@ -152,7 +152,7 @@ router.post("/login", checkParams(["phone", "password"]), function (req: MyReque
             if (err) {
                 return next(err);
             }
-            return res.status(200).json({ error: false, message: "Login riuscito", data:{
+            return res.status(200).json({ error: false, message: "Login riuscito", user:{
                 name: user.get().name,
                 city: user.get().city
             } });
