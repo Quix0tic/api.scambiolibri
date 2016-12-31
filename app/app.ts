@@ -90,12 +90,14 @@ export class ApiServer {
       next()
     })
     this._express.use(flash())
+    this._express.set('views', __dirname + '/views');
+    this._express.set('view engine', 'jade');
     this._express.use('/api', router)
     this._express.use("/", uiRouter)
     this._express.use('/logout', function (req, res, next) {
       req.logout();
       if (req.session)
-        req.session.destroy(function (err) {})
+        req.session.destroy(function (err) { })
       res.status(200).json({ error: false })
 
     })
