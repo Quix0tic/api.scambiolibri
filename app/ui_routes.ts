@@ -13,6 +13,6 @@ uiRouter.get("/", function (req: MyRequest, res, next: express.NextFunction) {
 uiRouter.get("/login", function (req, res, next: express.NextFunction) {
     res.render('index', {
         user: req.user,
-        error: req.flash('login-error')
+        error: req.flash('login-error'),
     })
 })

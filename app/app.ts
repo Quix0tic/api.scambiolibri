@@ -90,7 +90,7 @@ export class ApiServer {
       next()
     })
     this._express.use(flash())
-    this._express.set('views', '/home/marco/api.scambiolibri/app/views');
+    this._express.set('views', '../views');
     this._express.set('view engine', 'jade');
     this._express.use('/api', router)
     this._express.use("/", uiRouter)
