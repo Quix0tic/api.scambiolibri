@@ -11,7 +11,7 @@ import * as bodyParser from 'body-parser'
 import { router } from './routes'
 import { uiRouter } from './ui_routes'
 var cookieParser = require('cookie-parser');
-var flash = require('express-flash');
+var flash = require('connect-flash');
 
 export interface myError extends Error {
   statusCode?: number
@@ -90,7 +90,7 @@ export class ApiServer {
       next()
     })
     this._express.use(flash())
-    this._express.set('views', __dirname + '/views');
+    this._express.set('views', '/home/marco/api.scambiolibri/app/views');
     this._express.set('view engine', 'jade');
     this._express.use('/api', router)
     this._express.use("/", uiRouter)
