@@ -152,7 +152,10 @@ router.post("/login", checkParams(["phone", "password"]), function (req: MyReque
             if (err) {
                 return next(err);
             }
-            return res.status(200).json({ error: false, message: "Login riuscito" });
+            return res.status(200).json({ error: false, message: "Login riuscito", data:{
+                name: user.get().name,
+                city: user.get().city
+            } });
         })
     })(req, res, next);
 })
