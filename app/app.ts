@@ -67,7 +67,7 @@ export class ApiServer {
         db: this._database.db
       }),
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365,
+        maxAge: 3600000 * 24 * 365 * 100,
         secure: process.env.NODE_ENV === 'production'
       },
       proxy: true
