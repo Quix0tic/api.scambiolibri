@@ -51,7 +51,8 @@ router.route("/announcements")
         })
             .then(function (data) {
                 res.status(200).json({
-                    error: false,
+                    error: false, 
+                    data:data
                 })
             }, e => next(e))
     })
