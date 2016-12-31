@@ -9,9 +9,7 @@ let SequelizeStore = require('connect-session-sequelize')(session.Store)
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
 import { router } from './routes'
-import { uiRouter } from './ui_routes'
 var cookieParser = require('cookie-parser');
-var flash = require('connect-flash');
 
 export interface myError extends Error {
   statusCode?: number
@@ -89,11 +87,7 @@ export class ApiServer {
       req.sequelize = this._database
       next()
     })
-    this._express.use(flash())
-    this._express.set('views', '../views');
-    this._express.set('view engine', 'jade');
-    this._express.use('/api', router)
-    this._express.use("/", uiRouter)
+    this._express.use('/', router)
     this._express.use('/logout', function (req, res, next) {
       req.logout();
       if (req.session)
