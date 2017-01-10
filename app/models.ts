@@ -7,6 +7,8 @@ export interface UserAttribute {
     passwordHash: string
     passwordHashSalt: string
     city: string
+    updatedAt?: Date
+    createdAt?: Date
 }
 export interface AnnouncementAttribute {
     title: string

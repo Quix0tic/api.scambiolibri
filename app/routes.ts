@@ -51,8 +51,8 @@ router.route("/announcements")
         })
             .then(function (data) {
                 res.status(200).json({
-                    error: false, 
-                    announcement:data
+                    error: false,
+                    announcement: data
                 })
             }, e => next(e))
     })
@@ -152,10 +152,14 @@ router.post("/login", checkParams(["phone", "password"]), function (req: MyReque
             if (err) {
                 return next(err);
             }
-            return res.status(200).json({ error: false, message: "Login riuscito", user:{
-                name: user.get().name,
-                city: user.get().city
-            } });
+            return res.status(200).json({
+                error: false, message: "Login riuscito", user: {
+                    name: user.get().name,
+                    city: user.get().city,
+                    updatedAt: user.get().updatedAt,
+                    createdAt: user.get().createdAt
+                }
+            });
         })
     })(req, res, next);
 })
@@ -177,7 +181,14 @@ router.post("/signup", checkParams(["name", "phone", "password", "city"]), funct
             if (err) {
                 return next(err);
             }
-            return res.status(200).json({ error: false, message: 'Registrazione avvenuta' }) // User successfully signed up
+            return res.status(200).json({
+                error: false, user: {
+                    name: user.get().name,
+                    city: user.get().city,
+                    updatedAt: user.get().updatedAt,
+                    createdAt: user.get().createdAt
+                }
+            }) // User successfully signed up
         });
     })(req, res, next);
 })
