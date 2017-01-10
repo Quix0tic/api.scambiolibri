@@ -156,8 +156,8 @@ router.post("/login", checkParams(["phone", "password"]), function (req: MyReque
                 error: false, message: "Login riuscito", user: {
                     name: user.get().name,
                     city: user.get().city,
-                    updatedAt: user.get().updatedAt,
-                    createdAt: user.get().createdAt
+                    updatedAt: user.get().updatedAt!,
+                    createdAt: user.get().createdAt!
                 }
             });
         })
@@ -185,8 +185,8 @@ router.post("/signup", checkParams(["name", "phone", "password", "city"]), funct
                 error: false, user: {
                     name: user.get().name,
                     city: user.get().city,
-                    updatedAt: user.get().updatedAt,
-                    createdAt: user.get().createdAt
+                    updatedAt: user.get().updatedAt!,
+                    createdAt: user.get().createdAt!
                 }
             }) // User successfully signed up
         });
