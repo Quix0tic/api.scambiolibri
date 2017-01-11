@@ -24,7 +24,6 @@ router.route("/announcements")
     .get(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
         req.sequelize.Announcement.findAll({
             where: { city: req.user.get().city },
-            attributes: ["uuid", "title", "isbn", "subject", "notes", "price", "phone"],
             order: [['createdAt', 'DESC']]
         }).then(function (data) {
             res.status(200)
