@@ -53,7 +53,9 @@ export class ApiServer {
     ////////////////
     //  JSON BODY //
     ////////////////
-    this._express.use(bodyParser.json())
+    this._express.use(bodyParser.json())    
+    this._express.use(bodyParser.urlencoded({ extended: false }))
+
     this._express.use(cookieParser('thisIsReallySecret'))
 
     ////////////////////
