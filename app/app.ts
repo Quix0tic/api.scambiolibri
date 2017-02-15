@@ -88,6 +88,7 @@ export class ApiServer {
     this._express.use((req, res, next) => {
       req.get('Origin') && res.set('Access-Control-Allow-Origin', req.get('Origin'))
       res.set('Access-Control-Allow-Credentials', 'true')
+      res.set('Access-Control-Allow-Headers', 'Content-Type')
       return next()
     })
     this._express.use((req: MyRequest, res, next) => {
