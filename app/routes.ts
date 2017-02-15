@@ -12,7 +12,6 @@ const checkParams = (params: string[]) => (req: express.Request, res: express.Re
 }
 
 export var router = express.Router();
-var uuid = require("node-uuid");
 var passport = require('passport');
 
 router.route("/announcements")
