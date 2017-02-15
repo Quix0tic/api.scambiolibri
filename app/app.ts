@@ -53,7 +53,7 @@ export class ApiServer {
     ////////////////
     //  JSON BODY //
     ////////////////
-    this._express.use(bodyParser.json())    
+    this._express.use(bodyParser.json())
     this._express.use(bodyParser.urlencoded({ extended: false }))
 
     this._express.use(cookieParser('thisIsReallySecret'))
@@ -85,6 +85,11 @@ export class ApiServer {
     //////////////////
     //  MIDDLEWARE  //
     //////////////////
+    this._express.use((req, res, next) => {
+      req.get('Origin') && res.set('Access-Control-Allow-Origin', req.get('Origin'))
+      res.set('Access-Control-Allow-Credentials', 'true')
+      return next()
+    })
     this._express.use((req: MyRequest, res, next) => {
       req.sequelize = this._database
       next()
