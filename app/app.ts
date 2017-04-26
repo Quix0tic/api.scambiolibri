@@ -9,6 +9,7 @@ let SequelizeStore = require('connect-session-sequelize')(session.Store)
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
 import { router } from './routes'
+import * as compression from 'compression'
 var cookieParser = require('cookie-parser');
 
 export interface myError extends Error {
@@ -48,7 +49,13 @@ export class ApiServer {
   }
 
   public start = async () => {
+    this._express.disable('etag')
+    this._express.disable('server')
+    this._express.disable('x-powered-by')
+
     this._express.set('trust proxy', true)
+
+    this._express.use(compression())
 
     ////////////////
     //  JSON BODY //
@@ -129,9 +136,5 @@ export class ApiServer {
       console.error("Error while connecting to database: " + e)
       process.exit(1)
     })
-  }
-
-  public stop = async () => {
-    console.info("Port " + this._port + " is now free");
   }
 }
