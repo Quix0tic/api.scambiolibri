@@ -2,7 +2,8 @@ import * as express from 'express'
 import * as debug from 'debug'
 import { MyRequest } from './app'
 var checkLoggedIn = require(__dirname + '/../middleware/check-logged-in.js');
-import { UserInstance, AnnouncementInstance } from './models'
+import { UserInstance, AnnouncementInstance, AnnouncementModel } from './models'
+import {SequelizeStatic} from 'sequelize'
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
@@ -13,6 +14,10 @@ const checkParams = (params: string[]) => (req: express.Request, res: express.Re
 
 export var router = express.Router();
 var passport = require('passport');
+
+router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
+    req.sequelize.db.query("SELECT uuid,title,isbn,subject,edition,grade,notes,price,phone,city,\"createdAt\",\"updatedAt\" FROM announcements WHERE LOWER(city)=LOWER(?)", {model:req.sequelize.Announcement,replacements:[req.params.city]}).then(data => res.json(data))
+})
 
 router.route("/announcements")
 
@@ -54,6 +59,7 @@ router.route("/announcements")
                 })
             }, e => next(e))
     })
+
 
 router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
 

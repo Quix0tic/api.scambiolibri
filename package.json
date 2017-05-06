@@ -8,7 +8,7 @@
     "grunt": "grunt",
     "tsc": "tsc",
     "build": "tsc",
-    "start": "node./dist/index.js",
+    "start": "node ./dist/index.js",
     "tinstall": "typings install"
   },
   "author": "Marco Bortolan",

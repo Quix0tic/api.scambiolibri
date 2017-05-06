@@ -36,7 +36,7 @@ export class ApiServer {
       username: process.env.POSTGRES_USER || 'postgres',
       password: process.env.POSTGRES_PASSWORD || '',
       database: process.env.POSTGRES_DB || 'scambio_libri',
-      host: '127.0.0.1',
+      host: process.env.POSTGRES_HOST || '127.0.0.1',
       dialect: 'postgres',
       logging: debug('sequelize:db')
     } : {
