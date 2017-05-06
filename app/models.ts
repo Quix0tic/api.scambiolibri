@@ -31,8 +31,8 @@ export interface StorageConfiguration {
     logging?: (err: string) => any
 }
 
-export interface UserInstance extends Sequelize.Instance<UserAttribute> { }
-export interface AnnouncementInstance extends Sequelize.Instance<AnnouncementAttribute> { }
+export interface UserInstance extends Sequelize.Instance<UserAttribute>, UserAttribute { }
+export interface AnnouncementInstance extends Sequelize.Instance<AnnouncementAttribute>, AnnouncementAttribute { }
 
 export interface UserModel extends Sequelize.Model<UserInstance, UserAttribute> { }
 export interface AnnouncementModel extends Sequelize.Model<AnnouncementInstance, AnnouncementAttribute> { }

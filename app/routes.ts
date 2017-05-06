@@ -3,7 +3,7 @@ import * as debug from 'debug'
 import { MyRequest } from './app'
 var checkLoggedIn = require(__dirname + '/../middleware/check-logged-in.js');
 import { UserInstance, AnnouncementInstance, AnnouncementModel } from './models'
-import {SequelizeStatic} from 'sequelize'
+import { SequelizeStatic } from 'sequelize'
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
@@ -16,7 +16,7 @@ export var router = express.Router();
 var passport = require('passport');
 
 router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
-    req.sequelize.db.query("SELECT uuid,title,isbn,subject,edition,grade,notes,price,phone,city,\"createdAt\",\"updatedAt\" FROM announcements WHERE LOWER(city)=LOWER(?)", {model:req.sequelize.Announcement,replacements:[req.params.city]}).then(data => res.json(data))
+    req.sequelize.db.query("SELECT uuid,title,isbn,subject,edition,grade,notes,price,phone,city,\"createdAt\",\"updatedAt\" FROM announcements WHERE LOWER(city)=LOWER(?)", { model: req.sequelize.Announcement, replacements: [req.params.city] }).then(data => res.json(data))
 })
 
 router.route("/announcements")
@@ -57,9 +57,31 @@ router.route("/announcements")
                     error: false,
                     announcement: data
                 })
+                notification(data.city, data.isbn, data.title)
             }, e => next(e))
     })
 
+
+var FCM = require('fcm-push');
+var fcm = new FCM(process.env.FCM_KEY || '');
+
+function notification(city: String, isbn: string, title: string) {
+
+    fcm.send({
+        to: city.concat("/", isbn),
+        notification: {
+            title: 'Libri disponibili',
+            body: 'È disponibile il libro "' + title + '"'
+        }
+    },
+        function (err: any, response: any) {
+            if (err) {
+                console.log("Something has gone wrong! " + err);
+            } else {
+                console.log("Successfully sent with response: ", response);
+            }
+        });
+}
 
 router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
 
