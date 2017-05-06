@@ -68,7 +68,7 @@ var fcm = new FCM(process.env.FCM_KEY || '');
 function notification(city: String, isbn: string, title: string) {
 
     fcm.send({
-        to: city.concat("_", isbn),
+        to: city.toLowerCase().concat("_", isbn),
         notification: {
             title: 'Libri disponibili',
             body: 'È disponibile il libro "' + title + '"'
