@@ -235,15 +235,3 @@ router.get("/user/:phone", function (req: MyRequest, res, next: express.NextFunc
         }
     }, e => next(e))
 })
-
-
-router.get("/users", function (req: MyRequest, res, next: express.NextFunction) {
-
-    //////////////////
-    //  GET /users  //
-    //////////////////
-
-    req.sequelize.User.findAll({ attributes: ["name", "phone"] }).then(function (data) {
-        res.status(200).json(data)
-    }, e => next(e))
-})
