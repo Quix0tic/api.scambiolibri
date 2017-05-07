@@ -9,5 +9,5 @@ RUN npm install
 COPY . /home/pi/api.scambiolibri
 
 EXPOSE 8181
-
+RUN npm build
 RUN npm start
