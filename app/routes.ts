@@ -4,17 +4,7 @@ import { MyRequest } from './app'
 var checkLoggedIn = require(__dirname + '/../middleware/check-logged-in.js');
 import { UserInstance, AnnouncementInstance, AnnouncementModel } from './models'
 import { SequelizeStatic } from 'sequelize'
-
-import * as admin from "firebase-admin";
-
-admin.initializeApp({
-    credential: admin.credential.cert({
-        projectId: "iquadri-7a38c",
-        clientEmail: "firebase-adminsdk-ugnr0@iquadri-7a38c.iam.gserviceaccount.com",
-        privateKey: process.env.FCM_KEY as string
-    }),
-    databaseURL: "https://<DATABASE_NAME>.firebaseio.com"
-});
+import * as http from 'http'
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
@@ -75,10 +65,28 @@ router.route("/announcements")
 
 
 function notification(city: String, isbn: string, title: string) {
-    admin.messaging().sendToTopic(city.toLowerCase().concat("_", isbn), { data: { title: "Libri disponibili", body: 'È disponibile il libro "' + title + '"', isbn: isbn } })
-        .then(v => console.log("Notification sent"))
-        .catch(e => console.log("Notification not sent: " + e))
+    var data = JSON.stringify({
+        "to": "/topics/" + city.toLowerCase() + "_" + isbn,
+        "data": {
+            "title": "Libri disponibili",
+            "body": 'È disponibile il libro "' + title + '"',
+            "isbn": isbn
+        }
+    })
 
+    var req = http.request({
+        host: "fcm.googleapis.com",
+        port: 443,
+        path: "/fcm/send",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(data),
+            'Authorization':'key='.concat(process.env.FCM_KEY)
+        }
+    })
+    req.write(data)
+    req.end()
 }
 
 router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
