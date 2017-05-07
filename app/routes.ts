@@ -4,7 +4,7 @@ import { MyRequest } from './app'
 var checkLoggedIn = require(__dirname + '/../middleware/check-logged-in.js');
 import { UserInstance, AnnouncementInstance, AnnouncementModel } from './models'
 import { SequelizeStatic } from 'sequelize'
-import * as http from 'http'
+import * as request from 'request'
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
@@ -65,28 +65,18 @@ router.route("/announcements")
 
 
 function notification(city: String, isbn: string, title: string) {
-    var data = JSON.stringify({
-        "to": "/topics/" + city.toLowerCase() + "_" + isbn,
-        "data": {
-            "title": "Libri disponibili",
-            "body": 'È disponibile il libro "' + title + '"',
-            "isbn": isbn
-        }
+    request.post("https://fcm.googleapis.com/fcm/send", {
+        json: true,
+        body: {
+            to: "/topics/" + city.toLowerCase() + "_" + isbn,
+            data: {
+                title: "Libri disponibili",
+                body: 'È disponibile il libro "' + title + '"',
+                isbn: isbn
+            }
+        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'key='.concat(process.env.FCM_KEY) }
     })
-
-    var req = http.request({
-        host: "fcm.googleapis.com",
-        port: 443,
-        path: "/fcm/send",
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(data),
-            'Authorization':'key='.concat(process.env.FCM_KEY)
-        }
-    })
-    req.write(data)
-    req.end()
 }
 
 router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
