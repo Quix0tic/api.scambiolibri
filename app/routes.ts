@@ -6,7 +6,6 @@ import { UserInstance, AnnouncementInstance, AnnouncementModel } from './models'
 import { SequelizeStatic } from 'sequelize'
 
 import * as admin from "firebase-admin";
-var serviceAccount = require('../google-services.json')
 
 admin.initializeApp({
   credential: admin.credential.cert({
