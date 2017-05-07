@@ -8,12 +8,12 @@ import { SequelizeStatic } from 'sequelize'
 import * as admin from "firebase-admin";
 
 admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: "iquadri-7a38c",
-    clientEmail: "firebase-adminsdk-ugnr0@iquadri-7a38c.iam.gserviceaccount.com",
-    privateKey: process.env.FCM_KEY as string
-  }),
-  databaseURL: "https://<DATABASE_NAME>.firebaseio.com"
+    credential: admin.credential.cert({
+        projectId: "iquadri-7a38c",
+        clientEmail: "firebase-adminsdk-ugnr0@iquadri-7a38c.iam.gserviceaccount.com",
+        privateKey: process.env.FCM_KEY as string
+    }),
+    databaseURL: "https://<DATABASE_NAME>.firebaseio.com"
 });
 
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -75,7 +75,7 @@ router.route("/announcements")
 
 
 function notification(city: String, isbn: string, title: string) {
-    admin.messaging().sendToTopic(city.toLowerCase().concat("_", isbn), { notification: { title: "Libri disponibili", body: 'È disponibile il libro "' + title + '"' } })
+    admin.messaging().sendToTopic(city.toLowerCase().concat("_", isbn), { data: { title: "Libri disponibili", body: 'È disponibile il libro "' + title + '"', isbn: isbn } })
         .then(v => console.log("Notification sent"))
         .catch(e => console.log("Notification not sent: " + e))
 
