@@ -5,6 +5,14 @@ var checkLoggedIn = require(__dirname + '/../middleware/check-logged-in.js');
 import { UserInstance, AnnouncementInstance, AnnouncementModel } from './models'
 import { SequelizeStatic } from 'sequelize'
 
+import * as admin from "firebase-admin";
+var serviceAccount = require('../google-services.json')
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://iquadri-7a38c.firebaseio.com/"
+});
+
 const checkParams = (params: string[]) => (req: express.Request, res: express.Response, next: express.NextFunction) => {
     for (let param of params) {
         if (!req.body[param]) res.json({ error: true, message: `param ${param} is missing` })
@@ -62,25 +70,12 @@ router.route("/announcements")
     })
 
 
-var FCM = require('fcm-push');
-var fcm = new FCM(process.env.FCM_KEY || '');
 
 function notification(city: String, isbn: string, title: string) {
+    admin.messaging().sendToTopic(city.toLowerCase().concat("_", isbn), { notification: { title: "Libri disponibili", body: 'È disponibile il libro "' + title + '"' } })
+        .then(v => console.log("Notification sent"))
+        .catch(e => console.log("Notification not sent: " + e))
 
-    fcm.send({
-        to: "/topics/" + city.toLowerCase().concat("_", isbn),
-        notification: {
-            title: 'Libri disponibili',
-            body: 'È disponibile il libro "' + title + '"'
-        }
-    },
-        function (err: any, response: any) {
-            if (err) {
-                console.log("Something has gone wrong! " + err);
-            } else {
-                console.log("Successfully sent with response: ", response);
-            }
-        });
 }
 
 router.get("/user/announcements", checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
