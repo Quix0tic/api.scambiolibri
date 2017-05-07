@@ -10,4 +10,4 @@ COPY . /home/pi/api.scambiolibri
 
 EXPOSE 8181
 
-CMD["npm", "start"]
+RUN npm start
