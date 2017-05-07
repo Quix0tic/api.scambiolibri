@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1072310095092",
+    "firebase_url": "https://iquadri-7a38c.firebaseio.com",
+    "project_id": "iquadri-7a38c",
+    "storage_bucket": "iquadri-7a38c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072310095092:android:712bb652c74bf88a",
+        "android_client_info": {
+          "package_name": "com.bortolan.iquadriv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1072310095092-obmp6iillte1h90m3n5ketlhqh52pjbc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bortolan.iquadriv2",
+            "certificate_hash": "1419897550666c6e917d33ab7424f3287457eee7"
+          }
+        },
+        {
+          "client_id": "1072310095092-e4sam7u3s92lh619lpkgtg5n6n3tpeti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCazXsvCEnUL5CiMiZbmrMrBZ_zIwBx-sY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1072310095092-e4sam7u3s92lh619lpkgtg5n6n3tpeti.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
