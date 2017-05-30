@@ -1,7 +1,7 @@
 import * as passport from 'passport'
 import { UserModel, UserInstance } from './models'
-var crypto = require('crypto');
-import { Strategy as LocalStrategy } from 'passport-local'
+import * as crypto from 'crypto'
+import { Strategy as LocalStrategy, VerifyFunctionWithRequest } from 'passport-local'
 
 export function configure(passport: passport.Passport, User: UserModel) {
   passport.serializeUser((user: UserInstance, done) => done(null, user.get().phone))
@@ -38,13 +38,13 @@ export function configure(passport: passport.Passport, User: UserModel) {
               return done(null, createdUser);
             }, function (err) {
               console.info("ERROR signing-up")
-              return done(null, false);
+              return done(err);
             });
           });
         });
       } else { // User already registered
         console.info("User already registered")
-        return done(null, false);
+        return done(null, false, 403);
       }
     }, function (err) {
       console.info("ERROR while searching")
@@ -70,12 +70,12 @@ export function configure(passport: passport.Passport, User: UserModel) {
           if (generatedHash.toString('hex') == foundUser.passwordHash.toString('hex')) {
             return done(null, foundUser);
           } else {
-            return done(null, false);
+            return done(null, false,401);
           }
         });
       } else { // User is not found
         console.info("User not found")
-        return done(null, false);
+        return done(null, false, 403);
       }
     }, function (err) {
       console.info("ERROR while searching")

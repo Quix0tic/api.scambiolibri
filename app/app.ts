@@ -9,6 +9,7 @@ let SequelizeStore = require('connect-session-sequelize')(session.Store)
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser'
 import { router } from './routes'
+import { router as router2 } from './routes.v2'
 import * as compression from 'compression'
 var cookieParser = require('cookie-parser');
 
@@ -103,6 +104,7 @@ export class ApiServer {
       next()
     })
     this._express.use('/', router)
+    this._express.use('/v2', router2)
     this._express.use('/logout', function (req, res, next) {
       req.logout();
       if (req.session)
