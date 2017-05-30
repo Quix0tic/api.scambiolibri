@@ -50,15 +50,14 @@ router.route("/announcements")
             grade: req.body.grade,
             notes: req.body.notes,
             price: req.body.price,
-            phone: req.user.get().phone,
-            city: req.user.get().city
+            phone: req.user.get().phone
         })
             .then(function (data) {
                 res.status(200).json({
                     error: false,
                     announcement: data
                 })
-                notification(data.city, data.isbn, data.title)
+                notification(req.user.get().city, data.isbn, data.title)
             }, e => next(e))
     })
 

@@ -49,6 +49,8 @@ export class ApiServer {
     this._express = express()
   }
 
+
+
   public start = async () => {
     this._express.disable('etag')
     this._express.disable('server')
@@ -105,13 +107,8 @@ export class ApiServer {
     })
     this._express.use('/', router)
     this._express.use('/v2', router2)
-    this._express.use('/logout', function (req, res, next) {
-      req.logout();
-      if (req.session)
-        req.session.destroy(function (err) { })
-      res.status(200).json({ error: false })
-
-    })
+    this._express.use('/logout', logout)
+    this._express.use('/v2/logout', logout)
     //////////////////
     //  404 handler //
     //////////////////
@@ -139,4 +136,11 @@ export class ApiServer {
       process.exit(1)
     })
   }
+}
+function logout(req: any, res: any, next: any) {
+  req.logout();
+  if (req.session)
+    req.session.destroy(function (err: any) { })
+  res.status(200).json({ error: false })
+
 }

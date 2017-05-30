@@ -17,7 +17,8 @@ const checkParams = (params: string[]) => (req: express.Request, res: express.Re
 export var router = express.Router();
 
 router.get("/announcements/:city", function (req: MyRequest, res, next: express.NextFunction) {
-    req.sequelize.db.query("SELECT uuid,title,isbn,subject,edition,grade,notes,price,phone,city,\"createdAt\",\"updatedAt\" FROM announcements WHERE LOWER(city)=LOWER(?)", { model: req.sequelize.Announcement, replacements: [req.params.city] }).then(data => res.json(data))
+    req.sequelize.db.query("SELECT announcements.*, temp.name FROM announcements INNER JOIN (SELECT name, phone FROM users WHERE LOWER(city)=?) AS temp ON announcements.phone = temp.phone ORDER BY \"updatedAt\" DESC",
+        { replacements: [req.params.city.toLowerCase()], type: "SELECT" }).then(results => res.json(results))
 })
 
 router.route("/announcements")
@@ -27,13 +28,9 @@ router.route("/announcements")
     //////////////////////////
 
     .get(checkLoggedIn, function (req: MyRequest, res, next: express.NextFunction) {
-        req.sequelize.Announcement.findAll({
-            where: { city: req.user.get().city },
-            order: [['createdAt', 'DESC']]
-        }).then(function (data) {
-            res.status(200)
-                .json(data)
-        }, e => next(e))
+        req.sequelize.db.query("SELECT announcements.*, temp.name FROM announcements INNER JOIN (SELECT name, phone FROM users WHERE LOWER(city)=?) AS temp ON announcements.phone = temp.phone ORDER BY \"updatedAt\" DESC",
+            { replacements: [req.user.get().city.toLowerCase()], type: "SELECT" })
+            .then(data => res.json(data))
     })
 
     //////////////////////////      //
@@ -50,15 +47,14 @@ router.route("/announcements")
             grade: req.body.grade,
             notes: req.body.notes,
             price: req.body.price,
-            phone: req.user.get().phone,
-            city: req.user.get().city
+            phone: req.user.get().phone
         })
             .then(function (data) {
                 res.status(200).json({
                     error: false,
                     announcement: data
                 })
-                notification(data.city, data.isbn, data.title)
+                notification(req.user.get().city, data.isbn, data.title)
             }, e => next(e))
     })
 
@@ -101,7 +97,7 @@ router.route("/announcement/:uuid")
     //////////////////////////////
 
     .get(function (req: MyRequest, res, next: express.NextFunction) {
-        req.sequelize.Announcement.findByPrimary(req.params.uuid).then(function (data) {
+        req.sequelize.Announcement.findByPrimary(req.params.uuid, { include: [req.sequelize.User] }).then(function (data) {
             if (data) {
                 res.status(200).json(data)
             } else {
@@ -120,7 +116,7 @@ router.route("/announcement/:uuid")
             if (data) {     //Announcio trovato
                 if (data.get().phone == req.user.get().phone) { //L'utente sta modificando un suo annuncio
                     data.update(req.body).then(function (data) {
-                        res.status(200)
+                        res.status(200).send()
                     }, e => next(e))
                 } else {
                     res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
@@ -141,7 +137,7 @@ router.route("/announcement/:uuid")
             if (data) {
                 if (data.get().phone == req.user.get().phone) {//L'utente sta eliminando un suo annuncio
                     data.destroy().then(function () {
-                        res.status(200)
+                        res.status(200).json({ error: false })
                     }, e => next(e))
                 } else {
                     res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
@@ -159,24 +155,22 @@ router.post("/login", checkParams(["phone", "password"]), function (req: MyReque
     //  POST /login //
     //////////////////
 
-    passport.authenticate('local-login', function (err: any, user: UserInstance, status: number) {
+    passport.authenticate('local-login', function (err: any, user: UserInstance, authInfo: any) {
         if (err) {
             res.status(400).json({ error: true, message: err });
         } // Error inside login strategy
         if (!user) {
-            return res.status(status)
+            return res.status(401).json({ error: true, message: authInfo.message })
         } // User not signed up
         req.login(user, function (err) {
             if (err) {
                 return next(err);
             }
             return res.status(200).json({
-                error: false, message: "Login riuscito", user: {
-                    name: user.get().name,
-                    city: user.get().city,
-                    updatedAt: user.get().updatedAt!,
-                    createdAt: user.get().createdAt!
-                }
+                name: user.get().name,
+                city: user.get().city,
+                updatedAt: user.get().updatedAt!,
+                createdAt: user.get().createdAt!
             });
         })
     })(req, res, next);
@@ -188,24 +182,23 @@ router.post("/signup", checkParams(["name", "phone", "password", "city"]), funct
     //  POST /signup    //
     //////////////////////
 
-    passport.authenticate('local-signup', function (err: any, user: UserInstance) {
+    passport.authenticate('local-signup', function (err: any, user: UserInstance, status: number) {
         if (err) {
             res.status(400).json({ error: true, message: err });
         } // Error inside login strategy
         if (!user) {
-            return res.status(401).json({ error: true, message: 'Registrazione fallita' })
+            return res.status(status).json({ error: true, message: 'Utente già registrato' })
         } // User not signed up
         req.login(user, function (err) {
             if (err) {
                 return next(err);
             }
             return res.status(200).json({
-                error: false, user: {
-                    name: user.get().name,
-                    city: user.get().city,
-                    updatedAt: user.get().updatedAt!,
-                    createdAt: user.get().createdAt!
-                }
+                name: user.get().name,
+                city: user.get().city,
+                updatedAt: user.get().updatedAt!,
+                createdAt: user.get().createdAt!
+
             }) // User successfully signed up
         });
     })(req, res, next);

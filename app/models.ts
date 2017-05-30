@@ -19,7 +19,6 @@ export interface AnnouncementAttribute {
     notes: string
     price: number
     phone: string
-    city: string
 }
 export interface StorageConfiguration {
     database?: string
@@ -117,14 +116,12 @@ export class SequelizeDatabase {
             phone: {
                 type: Sequelize.STRING(10),
                 allowNull: false
-            },
-            city: {
-                type: Sequelize.STRING,
-                allowNull: false
             }
         }, {
                 tableName: 'announcements'
             })
+
+            this.Announcement.belongsTo(this.User, {foreignKey:"phone", constraints:false})
     }
 
     private _connect = async () => {

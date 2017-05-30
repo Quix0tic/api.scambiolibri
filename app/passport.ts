@@ -1,7 +1,7 @@
 import * as passport from 'passport'
 import { UserModel, UserInstance } from './models'
 import * as crypto from 'crypto'
-import { Strategy as LocalStrategy, VerifyFunctionWithRequest } from 'passport-local'
+import { Strategy as LocalStrategy, VerifyFunctionWithRequest, IVerifyOptions } from 'passport-local'
 
 export function configure(passport: passport.Passport, User: UserModel) {
   passport.serializeUser((user: UserInstance, done) => done(null, user.get().phone))
@@ -60,7 +60,7 @@ export function configure(passport: passport.Passport, User: UserModel) {
     usernameField: 'phone',
     passwordField: 'password',
     passReqToCallback: true
-  }, function (req: any, phone: string, password: string, done: any) {
+  }, function (req: any, phone: string, password: string, done: (error: any, user?: any, options?: IVerifyOptions) => void) {
     User.findByPrimary(phone).then(function (foundUser: any) {
       if (foundUser) { // User is found
         crypto.pbkdf2(password, foundUser.passwordHashSalt, 4096, 512, 'sha256', function (err: any, generatedHash: any) {
@@ -70,12 +70,13 @@ export function configure(passport: passport.Passport, User: UserModel) {
           if (generatedHash.toString('hex') == foundUser.passwordHash.toString('hex')) {
             return done(null, foundUser);
           } else {
-            return done(null, false,401);
+            console.info("Password errata")
+            return done(null, false, {message:"Password errata"});
           }
         });
       } else { // User is not found
         console.info("User not found")
-        return done(null, false, 403);
+        return done(null, false, {message:"Utente non registrato"});
       }
     }, function (err) {
       console.info("ERROR while searching")
