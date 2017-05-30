@@ -119,7 +119,7 @@ router.route("/announcement/:uuid")
                         res.status(200).send()
                     }, e => next(e))
                 } else {
-                    res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
+                    res.status(401).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
                 }
             } else {
                 res.status(400).json({ error: true, message: 'Nessun annuncio trovato' })
@@ -140,7 +140,7 @@ router.route("/announcement/:uuid")
                         res.status(200).json({ error: false })
                     }, e => next(e))
                 } else {
-                    res.status(403).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
+                    res.status(401).json({ error: true, message: 'Non puoi modificare annunci altrui!' })
                 }
             } else {
                 res.status(400).json({ error: true, message: 'Nessun annuncio trovato' })
